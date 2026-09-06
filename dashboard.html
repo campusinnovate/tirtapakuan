@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Pelanggan — Perumda Tirta Pakuan</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230f3b77'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='%23fff'>⌂</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ======= LOGIN / SSO SCREEN ======= -->
+<div class="auth-page" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand"><span class="brand-logo" style="background:var(--blue-600)">♧</span></div>
+    <h1>Masuk ke Dashboard</h1>
+    <p class="small muted text-center">Perumda Tirta Pakuan Kota Bogor</p>
+
+    <div style="margin-top:14px">
+      <label class="small" style="font-weight:600;display:block;margin-bottom:6px">Login sebagai / role demo</label>
+      <div class="role-picker" id="rolePicker">
+        <button class="role-opt active" data-role="pelanggan"><span class="ico">👤</span>Pelanggan</button>
+        <button class="role-opt" data-role="petugas"><span class="ico">🛠</span>Petugas</button>
+        <button class="role-opt" data-role="admin"><span class="ico">✦</span>Admin</button>
+      </div>
+    </div>
+
+    <div class="divider">atau</div>
+
+    <div class="field">
+      <label>ID Pelanggan / Username <small>(dummy — isi bebas)</small></label>
+      <input class="input" id="login-user" placeholder="cth. 3124508221 atau nama Anda">
+    </div>
+    <div class="field">
+      <label>Kata Sandi</label>
+      <input class="input" id="login-pass" type="password" placeholder="•••••••">
+      <small class="muted">Bebas diisi apa saja (demo).</small>
+    </div>
+
+    <button class="sso-btn" id="ssoBtn"><span class="logo" style="background:#1a2b49">BJS</span> Masuk dengan SSO Perumda / Bhumiputra</button>
+    <button class="sso-btn" id="ssoGoogle"><span class="logo" style="background:#dd4b39">G</span> Masuk dengan Google</button>
+
+    <button class="btn block" style="margin-top:16px" id="loginSubmit">Masuk →</button>
+
+    <p class="auth-note">Halaman demo pengembangan — data bersifat dummy, tidak terhubung ke server resmi Tirta Pakuan.</p>
+  </div>
+</div>
+
+<!-- ======= DASHBOARD SHELL ======= -->
+<div class="dash-shell hidden" id="dash-screen">
+  <div class="dash-top">
+    <div class="container dash-top-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-logo">♧</span>
+        <span>Perumda <b>Tirta Pakuan</b><small>Dashboard Pelanggan</small></span>
+      </a>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div class="dash-user" id="dash-user">
+          <span class="avatar" id="avatar-letter">BS</span>
+          <div><div class="name" id="user-name">Budi Santoso</div><div class="role" id="user-role">Pelanggan</div></div>
+        </div>
+        <a class="btn white small" href="ticketing.html">☏ Pusat Tiket</a>
+        <button class="btn white small" id="logoutBtn">Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container dash-layout">
+    <aside class="dash-side">
+      <nav class="nav-panel" id="dashNav">
+        <button data-sec="ringkasan" class="active"><span class="ico">◪</span>Ringkasan</button>
+        <button data-sec="pemakaian"><span class="ico">≋</span>Pemakaian Air</button>
+        <button data-sec="tagihan"><span class="ico">▧</span>Tagihan &amp; Pembayaran</button>
+        <button data-sec="tiket"><span class="ico">☏</span>Tiket Layanan</button>
+        <button data-sec="notifikasi"><span class="ico">♨</span>Notifikasi</button>
+        <button data-sec="profil"><span class="ico">⚙</span>Profil / Pengaturan</button>
+      </nav>
+      <div class="card" style="margin-top:16px;padding:16px">
+        <div class="small" style="font-weight:700;color:var(--blue-900)">Butuh bantuan cepat?</div>
+        <p class="small muted">Gangguan air, tagihan, atau pemasangan baru — buat tiket layanan.</p>
+        <a class="btn teal block small" href="ticketing.html">Buka Pusat Layanan →</a>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <!-- ==== RINGKASAN ==== -->
+      <section class="dash-section active" id="sec-ringkasan">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">Selamat datang, <span id="greet-name">Budi</span>! 👋</h2>
+        <p class="muted small">Berikut ringkasan akun dan status layanan terbaru Anda.</p>
+
+        <div class="stat-grid" style="margin-top:16px">
+          <div class="stat-card">
+            <div class="label">No. Pelanggan</div>
+            <div class="value" id="stat-nopel">3124508221</div>
+            <div class="delta up">● Aktif</div>
+          </div>
+          <div class="stat-card teal">
+            <div class="label">Pemakaian · Sep 2026</div>
+            <div class="value" id="stat-pemakaian">28 m³</div>
+            <div class="delta down">± dari bulan lalu</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="label">Tagihan Berjalan</div>
+            <div class="value" id="stat-tagihan">Rp 151.500</div>
+            <div class="delta">Belum dibayar</div>
+          </div>
+          <div class="stat-card green">
+            <div class="label">Tiket Aktif</div>
+            <div class="value" id="stat-tiket">2</div>
+            <div class="delta">Sedang diproses</div>
+          </div>
+        </div>
+
+        <div class="dash-grid-2" style="margin-top:20px">
+          <div class="card">
+            <div class="card-header"><h3>≋ Penggunaan Air 6 Bulan Terakhir</h3><a class="small" href="#" onclick="switchSec('pemakaian');return false">Detail →</a></div>
+            <div class="chart-bars" id="usage-chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>☏ Tiket Terbaru</h3><a class="small" href="#" onclick="switchSec('tiket');return false">Semua →</a></div>
+            <div id="ringkasan-tiket"></div>
+          </div>
+        </div>
+
+        <div class="dash-grid-2-eq" style="margin-top:18px">
+          <div class="card">
+            <div class="card-header"><h3>▧ Tagihan Terakhir</h3><a class="small" href="#" onclick="switchSec('tagihan');return false">Detail →</a></div>
+            <div class="pay-row"><div><b>Agu 2026</b><div class="small muted">Stand meter: 412 → 442 · 30 m³</div></div><div class="amount" style="color:var(--danger);text-decoration:line-through">Rp 158.000</div></div>
+            <div class="pay-row"><div><b>Jul 2026</b><div class="small muted">26 m³</div></div><div class="amount">Rp 141.000</div><span class="chip teal">Lunas</span></div>
+            <div class="pay-row"><div><b>Jun 2026</b><div class="small muted">19 m³</div></div><div class="amount">Rp 108.500</div><span class="chip teal">Lunas</span></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>♨ Notifikasi</h3><a class="small" href="#" onclick="switchSec('notifikasi');return false">Semua →</a></div>
+            <div id="ringkasan-notif"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== PEMAKAIAN AIR ==== -->
+      <section class="dash-section" id="sec-pemakaian">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">≋ Pemakaian Air</h2>
+        <p class="muted small">Tracker pemakaian per bulan (m³) dan estimasi tagihan. Klik bar untuk detail.</p>
+        <div class="card" style="margin-top:16px">
+          <div class="card-header">
+            <h3>Penggunaan Air (m³ per bulan)</h3>
+            <div class="seg" id="periodSeg">
+              <button data-period="6" class="active">6 Bulan</button>
+              <button data-period="12">12 Bulan</button>
+            </div>
+          </div>
+          <div class="chart-bars" id="usage-chart-lg" style="height:200px;margin-top:16px"></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header"><h3>Rincian Bulan Berjalan (September 2026)</h3></div>
+          <div class="form-grid-2" id="rincian-pemakaian"></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header"><h3>Perbandingan dengan Periode Lalu</h3></div>
+          <table class="table">
+            <thead><tr><th>Bulan</th><th>m³</th><th>Estimasi</th><th>Status</th></tr></thead>
+            <tbody id="tabel-pemakaian"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==== TAGIHAN ==== -->
+      <section class="dash-section" id="sec-tagihan">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">▧ Tagihan &amp; Pembayaran</h2>
+        <p class="muted small">Riwayat rekening dan pembayaran rekening air Anda.</p>
+
+        <div class="stat-grid" style="margin-top:16px">
+          <div class="stat-card"><div class="label">Tagihan Belum Bayar</div><div class="value">Rp 309.500</div></div>
+          <div class="stat-card green"><div class="label">Total Terbayar (YTD)</div><div class="value">Rp 500.500</div></div>
+          <div class="stat-card teal"><div class="label">Rata-rata / Bulan</div><div class="value">Rp 135.083</div></div>
+          <div class="stat-card amber"><div class="label">Jatuh Tempo Berikutnya</div><div class="value">20 Okt 2026</div></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header"><h3>Metode Pembayaran</h3><span class="chip blue">Virtual Account / QRIS</span></div>
+          <p class="small muted">Bayar lewat mitra PPOB: bank bjb, BTN, BRI, Pos Indonesia, Indomaret, Alfamart, atau aplikasi SIMOTIP.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn teal small" onclick="TP.toast('Terhubung ke kanal pembayaran (demo).','success')">Bayar Sekarang (Demo)</button>
+            <button class="btn ghost small" onclick="TP.toast('Instruksi pembayaran dikirim ke WhatsApp Anda (demo).')">Kirim Instruksi</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header"><h3>Riwayat Rekening</h3></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Periode</th><th>Pemakaian</th><th>Stand Meter</th><th class="right">Nominal</th><th>Status</th><th>Batas Bayar</th></tr></thead>
+              <tbody id="tabel-tagihan"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== TIKET ==== -->
+      <section class="dash-section" id="sec-tiket">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">☏ Tiket Layanan</h2>
+        <p class="muted small">Kelola seluruh tiket layanan &amp; keluhan Anda dari sini.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn teal" href="ticketing.html">＋ Buat Tiket Baru</a>
+          <a class="btn ghost" href="ticketing.html">Buka Pusat Layanan →</a>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div id="dash-ticket-list"></div>
+        </div>
+      </section>
+
+      <!-- ==== NOTIFIKASI ==== -->
+      <section class="dash-section" id="sec-notifikasi">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">♨ Notifikasi</h2>
+        <p class="muted small">Pengumuman dan informasi terbaru untuk akun Anda.</p>
+        <div class="card" style="margin-top:16px">
+          <div id="notif-list"></div>
+        </div>
+      </section>
+
+      <!-- ==== PROFIL ==== -->
+      <section class="dash-section" id="sec-profil">
+        <h2 style="font-size:1.5rem;color:var(--blue-900)">⚙ Profil &amp; Pengaturan</h2>
+        <p class="muted small">Data pelanggan terdaftar. Perubahan tersimpan lokal (dummy).</p>
+        <div class="card" style="margin-top:16px;max-width:620px">
+          <div class="card-header"><h3>Data Pelanggan</h3><span class="chip teal" id="profil-status">Aktif</span></div>
+          <div class="form-grid-2">
+            <div class="field"><label>Nama</label><input class="input" id="p-nama"></div>
+            <div class="field"><label>No. Pelanggan</label><input class="input" id="p-nopel" disabled></div>
+            <div class="field"><label>Email</label><input class="input" id="p-email" placeholder="nama@email.com"></div>
+            <div class="field"><label>No. HP / WA</label><input class="input" id="p-nohp"></div>
+            <div class="field"><label>Alamat</label><input class="input" id="p-alamat"></div>
+            <div class="field"><label>Zona</label><input class="input" id="p-zona"></div>
+          </div>
+          <div class="small muted" id="p-tarif" style="margin-bottom:14px"></div>
+          <button class="btn" id="saveProfil">Simpan Perubahan</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script src="js/main.js"></script>
+<script>
+  (function () {
+    const TP = window.TP;
+    TP.ensureSpace();
+
+    const $ = (id) => document.getElementById(id);
+    const SESSION_KEY = "tirtapakuan_session";
+
+    let role = "pelanggan";
+    let currentUser = null;
+
+    /* ---------- ROLE PICKER ---------- */
+    document.querySelectorAll("#rolePicker .role-opt").forEach((b) => {
+      b.addEventListener("click", () => {
+        role = b.dataset.role;
+        document.querySelectorAll("#rolePicker .role-opt").forEach((x) => x.classList.toggle("active", x === b));
+      });
+    });
+
+    function login(nameInput) {
+      const name = (nameInput || $("login-user").value.trim() || TP.DEFAULT_CUSTOMER.nama);
+      currentUser = {
+        name: name || TP.DEFAULT_CUSTOMER.nama,
+        role,
+        noPelanggan: TP.DEFAULT_CUSTOMER.noPelanggan,
+        noHP: "0812 3456 7890"
+      };
+      const initial = name.trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+      currentUser.initial = initial || "PA";
+      $("avatar-letter").textContent = currentUser.initial;
+      $("user-name").textContent = currentUser.name;
+      $("user-role").textContent = roleLabel();
+      $("greet-name").textContent = currentUser.name.split(" ")[0];
+      localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+      $("auth-screen").classList.add("hidden");
+      $("dash-screen").classList.remove("hidden");
+      TP.toast("Selamat datang, " + currentUser.name.split(" ")[0] + "! Masuk sebagai " + roleLabel(), "success");
+      renderAll();
+    }
+    function roleLabel() {
+      return role === "pelanggan" ? "Pelanggan" : role === "petugas" ? "Petugas Lapangan" : "Administrator";
+    }
+
+    $("loginSubmit").addEventListener("click", () => login());
+    $("login-pass").addEventListener("keydown", (e) => { if (e.key === "Enter") login(); });
+    $("ssoBtn").addEventListener("click", () => { TP.toast("Mengautentikasi SSO Perumda... ✓ (demo)", "success"); setTimeout(() => login("Budi Santoso"), 700); });
+    $("ssoGoogle").addEventListener("click", () => { TP.toast("Menghubungkan akun Google... ✓ (demo)", "success"); setTimeout(() => login("Budi Santoso"), 700); });
+    $("logoutBtn").addEventListener("click", () => {
+      currentUser = null;
+      localStorage.removeItem(SESSION_KEY);
+      TP.toast("Anda telah keluar.", "success");
+      $("dash-screen").classList.add("hidden");
+      $("auth-screen").classList.remove("hidden");
+    });
+
+    /* ---------- NAVIGATION ---------- */
+    window.switchSec = function (id) {
+      document.querySelectorAll(".dash-section").forEach((s) => s.classList.toggle("active", s.id === "sec-" + id));
+      document.querySelectorAll("#dashNav button").forEach((b) => b.classList.toggle("active", b.dataset.sec === id));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    document.querySelectorAll("#dashNav button").forEach((b) => b.addEventListener("click", () => switchSec(b.dataset.sec)));
+
+    /* ---------- CHART ---------- */
+    function renderChart(wrapId, data, height) {
+      const wrap = $(wrapId);
+      const max = Math.max(...data.map((d) => d.m3), 1);
+      wrap.innerHTML = data.map((d) => {
+        const pct = Math.round((d.m3 / max) * 100);
+        let cls = d.m3 >= 35 ? "high" : d.m3 >= 22 ? "ok" : "low";
+        const unpaid = d.bayar === false;
+        return '<div class="bar ' + cls + '" style="height:' + pct + '%" title="' + d.bulan + ": " + d.m3 + ' m³ — ' + TP.fmtRupiah(d.tagihan) + '">' +
+          "<i>" + d.m3 + "</i><em>" + d.bulan + (unpaid ? " •" : "") + "</em></div>";
+      }).join("");
+    }
+    function renderAll() {
+      renderStats();
+      renderChart("usage-chart", TP.WATER_USAGE, 120);
+      renderChart("usage-chart-lg", TP.WATER_USAGE, 200);
+      renderRincian();
+      renderTabelPemakaian();
+      renderTabelTagihan();
+      renderRingkasanTiket();
+      renderDashTiket();
+      renderNotif();
+      renderProfil();
+    }
+
+    /* ---------- RINGKASAN STATS ---------- */
+    function renderStats() {
+      const last = TP.WATER_USAGE[TP.WATER_USAGE.length - 1];
+      const prev = TP.WATER_USAGE[TP.WATER_USAGE.length - 2];
+      $("stat-nopel").textContent = currentUser?.noPelanggan || TP.DEFAULT_CUSTOMER.noPelanggan;
+      $("stat-pemakaian").textContent = last.m3 + " m³";
+      $("stat-tagihan").textContent = TP.fmtRupiah(last.tagihan);
+      $("stat-tiket").textContent = countActiveTickets();
+      const diffEl = document.querySelector("#sec-ringkasan .stat-card.teal .delta");
+      if (diffEl) {
+        const diff = last.m3 - prev.m3;
+        diffEl.textContent = (diff >= 0 ? "+" : "") + diff + " m³ dari bulan lalu";
+        diffEl.classList.remove("up", "down");
+        diffEl.classList.add(diff >= 0 ? "up" : "down");
+      }
+    }
+    function countActiveTickets() {
+      return TP.DB.get().tickets.filter((t) => t.status !== "Selesai" && t.status !== "Dibatalkan").length;
+    }
+
+    /* ---------- PEMAKAIAN DETAIL ---------- */
+    function renderRincian() {
+      const last = TP.WATER_USAGE[TP.WATER_USAGE.length - 1];
+      $("rincian-pemakaian").innerHTML =
+        '<div class="small"><b>Pemakaian bulan ini:</b> ' + last.m3 + ' m³</div>' +
+        '<div class="small"><b>Estimasi tagihan:</b> ' + TP.fmtRupiah(last.tagihan) + "</div>" +
+        '<div class="small"><b>Stand meter:</b> 442 m³ (estimasi)</div>' +
+        '<div class="small"><b>Status:</b> <span class="chip amber">Belum dibayar</span></div>' +
+        '<div class="small"><b>Tarif:</b> ' + TP.DEFAULT_CUSTOMER.tarif + '</div>' +
+        '<div class="small"><b>Batas pembayaran:</b> 20 Okt 2026</div>';
+    }
+    function renderTabelPemakaian() {
+      $("tabel-pemakaian").innerHTML = TP.WATER_USAGE.slice().reverse().map((d) =>
+        "<tr><td>" + d.bulan + ' 2026</td><td>' + d.m3 + " m³</td><td>" + TP.fmtRupiah(d.tagihan) + "</td><td>" +
+        (d.bayar ? '<span class="chip teal">Lunas</span>' : '<span class="chip amber">Belum bayar</span>') + "</td></tr>"
+      ).join("");
+    }
+
+    /* ---------- TAGIHAN ---------- */
+    function renderTabelTagihan() {
+      $("tabel-tagihan").innerHTML = TP.WATER_USAGE.slice().reverse().map((d, i) =>
+        "<tr><td>" + d.bulan + ' 2026</td><td>' + d.m3 + ' m³</td><td>412 → 442</td><td class="right">' + TP.fmtRupiah(d.tagihan) + "</td><td>" +
+        (d.bayar ? '<span class="chip teal">Lunas</span>' : '<span class="chip amber">Belum bayar</span>') + "</td><td>" +
+        (d.bayar ? "Lunas" : "20 " + d.bulan + " 2026") + "</td></tr>"
+      ).join("");
+    }
+
+    /* ---------- TIKET ---------- */
+    function ticketRowHtml(t, click) {
+      const isJasa = t.type === "jasa";
+      const sym = isJasa ? "▤" : "☏";
+      const sm = TP.STATUS_META[t.status] || { chip: "gray" };
+      const pm = TP.PRIORITY_META[t.prioritas] || { chip: "gray" };
+      return '<button class="ticket-row" data-id="' + t.id + '" onclick="' + click + '">' +
+        '<span class="t-symbol">' + sym + "</span>" +
+        '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
+        '<div class="t-meta">' + (isJasa ? "Jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pm.chip + '">' + t.prioritas + '</span><span class="chip ' + sm.chip + '">' + t.status + "</span></div></button>";
+    }
+    function renderRingkasanTiket() {
+      const recent = TP.DB.get().tickets.slice(0, 3);
+      $("ringkasan-tiket").innerHTML = recent.length
+        ? recent.map((t) => ticketRowHtml(t, "switchSec('tiket')")).join("")
+        : '<p class="muted small text-center" style="padding:14px 0">Belum ada tiket.</p>';
+    }
+    function renderDashTiket() {
+      const all = TP.DB.get().tickets;
+      $("dash-ticket-list").innerHTML = all.length
+        ? all.map((t) => ticketRowHtml(t, "openTicket('" + t.id + "')")).join("")
+        : '<p class="muted text-center" style="padding:20px 0">Belum ada tiket. Buat tiket baru dari Pusat Layanan.</p>';
+    }
+    window.openTicket = function (id) { location.href = "ticketing.html"; };
+
+    /* ---------- NOTIFIKASI ---------- */
+    function renderNotif() {
+      const wrap = $("notif-list");
+      const all = TP.DB.get().notifications;
+      wrap.innerHTML = all.map((n) =>
+        '<div class="notif' + (n.unread ? " unread" : "") + '"><span class="ico">' + n.ico + "</span><div><p>" + n.text + '</p><time>' + n.time + "</time></div></div>"
+      ).join("") + '<div style="margin-top:12px"><button class="btn ghost small" onclick="TP.toast(\'Semua dibaca (demo).\')">✓ Tandai semua dibaca</button></div>';
+      const sum = $("ringkasan-notif");
+      if (sum) {
+        sum.innerHTML = all.slice(0, 3).map((n) =>
+          '<div class="notif' + (n.unread ? " unread" : "") + '"><span class="ico">' + n.ico + "</span><div><p>" + n.text + '</p><time>' + n.time + "</time></div></div>"
+        ).join("");
+      }
+    }
+
+    /* ---------- PROFIL ---------- */
+    function renderProfil() {
+      const c = currentUser || TP.DEFAULT_CUSTOMER;
+      $("p-nama").value = c.name || TP.DEFAULT_CUSTOMER.nama;
+      $("p-nopel").value = TP.DEFAULT_CUSTOMER.noPelanggan;
+      $("p-nohp").value = TP.DEFAULT_CUSTOMER.alamat ? "0812 3456 7890" : "";
+      $("p-alamat").value = TP.DEFAULT_CUSTOMER.alamat;
+      $("p-zona").value = TP.DEFAULT_CUSTOMER.zona;
+      $("profil-status").textContent = TP.DEFAULT_CUSTOMER.status;
+      $("p-tarif").textContent = "Tarif: " + TP.DEFAULT_CUSTOMER.tarif + " • Golongan: " + TP.DEFAULT_CUSTOMER.golongan;
+    }
+    $("saveProfil").addEventListener("click", () => {
+      TP.DEFAULT_CUSTOMER.nama = $("p-nama").value.trim() || TP.DEFAULT_CUSTOMER.nama;
+      TP.DEFAULT_CUSTOMER.alamat = $("p-alamat").value.trim();
+      currentUser.name = $("p-nama").value.trim();
+      currentUser.initial = $("p-nama").value.trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+      localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+      $("user-name").textContent = currentUser.name;
+      $("avatar-letter").textContent = currentUser.initial;
+      renderAll();
+      TP.toast("Profil berhasil disimpan (demo).", "success");
+    });
+
+    /* ---------- PERIOD SEGMENT ---------- */
+    document.querySelectorAll("#periodSeg button").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll("#periodSeg button").forEach((x) => x.classList.toggle("active", x === b));
+        const n = Number(b.dataset.period);
+        const data = n === 6 ? TP.WATER_USAGE : extendUsage12();
+        renderChart("usage-chart-lg", data, 200);
+      });
+    });
+    function extendUsage12() {
+      const months = TP.WATER_USAGE;
+      const out = [];
+      for (let i = 0; i < 12; i++) {
+        const seed = months[i % months.length];
+        out.push({
+          bulan: monthName(i),
+          m3: Math.max(10, Math.round(seed.m3 + (i % 3 === 0 ? 4 : i % 3 === 1 ? -3 : 0))),
+          tagihan: seed.tagihan,
+          bayar: i % 4 !== 0
+        });
+      }
+      return out;
+    }
+    function monthName(i) {
+      const names = ["Okt", "Nov", "Des", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
+      return names[i];
+    }
+
+    /* ---------- AUTO LOGIN if session exists ---------- */
+    (function init() {
+      try {
+        const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+        if (s && s.name) { role = s.role || "pelanggan"; login(s.name); return; }
+      } catch (e) {}
+      $("login-user").value = TP.DEFAULT_CUSTOMER.nama;
+    })();
+  })();
+</script>
+</body>
+</html>
