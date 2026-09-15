@@ -30,7 +30,7 @@
     <div class="container hero-content">
       <span class="eyebrow" style="color:#7fd4ee">PUSAT LAYANAN TERPADU</span>
       <h1 style="font-size:clamp(1.7rem,3.6vw,2.5rem)">Pusat Layanan Pelanggan<br>&amp; Sistem Tiket</h1>
-      <p>Ajukan permohonan jasa atau laporkan keluhan air Anda. Setiap tiket memiliki nomor unik dan dapat dipantau statusnya secara real-time.</p>
+      <p>Ajukan permohonan jasa atau laporkan keluhan air Anda. Setiap tiket memiliki nomor unik, daftar kelengkapan berkas, ringkasan kebutuhan, dan status yang dapat dipantau real-time.</p>
       <div class="hero-actions">
         <a class="btn white" href="#layanan-tiket">☏ Buat Tiket Baru</a>
         <a class="btn ghost" href="#daftar-tiket" style="border-color:#fff;color:#fff">Lihat Status Tiket</a>
@@ -49,7 +49,7 @@
         <div class="card-header">
           <div>
             <h3>☏ Daftar &amp; Status Tiket Anda</h3>
-            <div class="sub">Pilih tiket untuk melihat detail, riwayat, dan status terbaru.</div>
+            <div class="sub">Pilih tiket untuk melihat ringkasan kebutuhan, kelengkapan berkas, riwayat, dan status terbaru.</div>
           </div>
           <div class="seg" id="filterSeg">
             <button data-filter="semua" class="active">Semua</button>
@@ -64,13 +64,16 @@
         <div class="card-header">
           <div>
             <h3>＋ Buat Tiket Baru</h3>
-            <div class="sub">Pilih jenis layanan, lengkapi detail jasa atau keluhan, dan kirim.</div>
+            <div class="sub">Lengkapi 5 langkah: layanan, formulir, syarat &amp; kontrak, dokumen persyaratan, lalu kirim.</div>
           </div>
         </div>
+
         <div class="stepper" id="stepper">
-          <div class="step active" data-step="1"><span class="n">1</span>Jenis<b>Jasa / Keluhan</b></div>
-          <div class="step" data-step="2"><span class="n">2</span>Detail<b>Detail permintaan</b></div>
-          <div class="step" data-step="3"><span class="n">3</span>Konfirmasi<b>Kirim tiket</b></div>
+          <div class="step active" data-step="1"><span class="n">1</span>Layanan<b>Jasa / Keluhan</b></div>
+          <div class="step" data-step="2"><span class="n">2</span>Form<b>Detail permintaan</b></div>
+          <div class="step" data-step="3"><span class="n">3</span>Syarat<b>Syarat &amp; kontrak</b></div>
+          <div class="step" data-step="4"><span class="n">4</span>Dokumen<b>Ringkasan &amp; berkas</b></div>
+          <div class="step" data-step="5"><span class="n">5</span>Kirim<b>Konfirmasi</b></div>
         </div>
 
         <div class="seg" id="typeSeg" style="margin-bottom:18px">
@@ -78,14 +81,18 @@
           <button type="button" data-type="keluhan">Lapor Keluhan</button>
         </div>
 
-        <form id="ticket-form">
+        <form id="ticket-form" novalidate>
+          <!-- ======== LANGKAH 1 : JENIS & LAYANAN ======== -->
           <div class="step-pane" data-pane="1">
             <div class="field">
               <label>Apa yang Anda butuhkan? <small id="type-hint">— pilih jenis jasa</small></label>
               <select class="select" id="f-layanan" required></select>
             </div>
             <div class="alert alert--info hidden" id="layanan-desc"></div>
-            <div class="form-grid-2">
+            <div id="layanan-detail-row">
+              <button type="button" class="btn ghost small hidden" id="btnSvcDetail">⇲ Lihat Detail Layanan (Syarat, Kontrak, Jenis Pelanggan, Dokumen, Estimasi)</button>
+            </div>
+            <div class="form-grid-2" id="contact-grid">
               <div class="field">
                 <label>Nama Lengkap</label>
                 <input class="input" id="f-nama" required placeholder="Nama sesuai KTP">
@@ -114,18 +121,16 @@
               </div>
             </div>
             <div style="display:flex;gap:10px;justify-content:flex-end">
-              <button type="button" class="btn" id="toStep2">Lanjut: Detail permintaan →</button>
+              <button type="button" class="btn" id="toStep2">Lanjut: Detail Permintaan →</button>
             </div>
           </div>
 
+          <!-- ======== LANGKAH 2 : FORM LAYANAN / KELUHAN ======== -->
           <div class="step-pane hidden" data-pane="2">
-            <div class="field">
-              <label id="detail-label">Detail keluhan / permintaan *</label>
-              <textarea class="textarea" id="f-deskripsi" required placeholder="Jelaskan detail kebutuhan jasa atau keluhan Anda secara rinci..."></textarea>
-            </div>
-            <div class="field hidden" id="f-jasa-catatan-wrap">
+            <div id="svc-form"></div>
+            <div class="field" id="f-catatan-wrap">
               <label for="f-catatan">Catatan tambahan (opsional)</label>
-              <input class="input" id="f-jasa-catatan" placeholder="Catatan mis. estimasi biaya, jadwal yang diinginkan...">
+              <input class="input" id="f-catatan" placeholder="Mis. estimasi biaya, jadwal yang diinginkan, atau keterangan lain...">
             </div>
             <div class="field">
               <label>Prioritas</label>
@@ -135,21 +140,53 @@
                 <option>Tinggi</option>
                 <option>Sangat Tinggi</option>
               </select>
-              <small>Prioritas tinggi untuk keluhan mendesak seperti tidak ada air sama sekali / kebocoran besar.</small>
+              <small>Prioritas tinggi untuk hal mendesak seperti tidak ada air sama sekali atau kebocoran besar.</small>
             </div>
             <div style="display:flex;gap:10px;justify-content:space-between">
               <button type="button" class="btn ghost" id="backStep1">← Kembali</button>
-              <button type="button" class="btn" id="toStep3">Lanjut: Konfirmasi →</button>
+              <button type="button" class="btn" id="toStep3">Lanjut: Syarat &amp; Kontrak →</button>
             </div>
           </div>
 
+          <!-- ======== LANGKAH 3 : SYARAT, KONTRAK, JENIS PELANGGAN ======== -->
           <div class="step-pane hidden" data-pane="3">
+            <div id="syarat-area"></div>
+            <div style="display:flex;gap:10px;justify-content:space-between">
+              <button type="button" class="btn ghost" id="backStep2">← Kembali</button>
+              <button type="button" class="btn" id="toStep4">Lanjut: Dokumen &amp; Ringkasan →</button>
+            </div>
+          </div>
+
+          <!-- ======== LANGKAH 4 : RINGKASAN KEBUTUHAN & DOKUMEN ======== -->
+          <div class="step-pane hidden" data-pane="4">
+            <div class="card tcard">
+              <div class="card-header"><h3>▧ Ringkasan Kebutuhan</h3></div>
+              <div class="sum-body" id="ringkasan-box"></div>
+            </div>
+            <div class="card tcard">
+              <div class="card-header">
+                <div>
+                  <h3>▦ Dokumen Persyaratan</h3>
+                  <div class="sub">Tandai "Siap" atau unggah lampiran. Semua berkas <b>wajib</b> harus selesai sebelum tiket diproses.</div>
+                </div>
+              </div>
+              <div class="progress-doc"><div id="doc-progress" style="width:0%"></div></div>
+              <div id="dokumen-box" style="margin-top:6px"></div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:space-between">
+              <button type="button" class="btn ghost" id="backStep3">← Kembali</button>
+              <button type="button" class="btn" id="toStep5">Lanjut: Konfirmasi →</button>
+            </div>
+          </div>
+
+          <!-- ======== LANGKAH 5 : KONFIRMASI & KIRIM ======== -->
+          <div class="step-pane hidden" data-pane="5">
             <div class="alert alert--info" id="confirm-summary"></div>
-            <div class="field">
-              <label><input type="checkbox" id="f-syarat" required> Saya menyatakan data yang diisi adalah benar dan setuju diproses oleh petugas Tirta Pakuan.</label>
+            <div class="field" id="finish-check-wrap">
+              <label><input type="checkbox" id="f-syarat" required> Saya menyatakan data yang diisi adalah benar, menyetujui seluruh syarat &amp; kontrak, dan dokumen yang ditandai telah saya siapkan. Saya bersedia diproses oleh petugas Tirta Pakuan.</label>
             </div>
             <div style="display:flex;gap:10px;justify-content:space-between;align-items:center">
-              <button type="button" class="btn ghost" id="backStep2">← Kembali</button>
+              <button type="button" class="btn ghost" id="backStep4">← Kembali</button>
               <button type="submit" class="btn teal" id="submitBtn">✓ Kirim Tiket</button>
             </div>
           </div>
@@ -183,21 +220,11 @@
       <div><h3>Website</h3><a href="index.html">Beranda</a><a href="index.html#berita">Berita</a><a href="index.html#kontak">Hubungi Kami</a></div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Perumda Tirta Pakuan Kota Bogor — Sistem tiket versi pengembangan (dummy).</span>
+      <span>© 2026 Perumda Tirta Pakuan Kota Bogor — Sistem layanan pelanggan &amp; tiket (terpadu).</span>
       <span>Jl. Raya Cibanteng No.1, Tanah Sareal, Kota Bogor</span>
     </div>
   </div>
 </footer>
-
-<div class="modal-backdrop" id="ticket-modal">
-  <div class="modal modal-xl">
-    <div class="modal-head">
-      <h3 id="modal-ticket-title"></h3>
-      <button class="modal-close" data-close="ticket-modal" aria-label="Tutup">×</button>
-    </div>
-    <div id="modal-ticket-body"></div>
-  </div>
-</div>
 
 <div id="toast-wrap"></div>
 
@@ -210,24 +237,17 @@
     let filter = "semua";
     let type = "jasa";
     let step = 1;
-    let editingTicket = null;
+
+    let selJenis = null;        // id jenis pelanggan
+    let syaratChecked = [];     // id poin syarat
+    let kontrakChecked = [];    // id poin kontrak
+    let doks = [];              // {id,nama,wajib,status,file}
+    let doksFor = "";           // serviceId yang sedang dimuat dokumennya
+    const MAX_FILE = 1000 * 1024;
 
     const el = (id) => document.getElementById(id);
-    const serialize = () => ({
-      type,
-      idLayanan: el("f-layanan").value,
-      nmLayanan: TP.svc(el("f-layanan").value)?.nama || "",
-      nama: el("f-nama").value.trim(),
-      noHP: el("f-nohp").value.trim(),
-      alamat: el("f-alamat").value.trim(),
-      zona: el("f-zona").value,
-      noPelanggan: el("f-nopel").value.trim() || "—",
-      jasa: type === "jasa" ? el("f-deskripsi").value.trim() : "",
-      keluhan: type === "keluhan" ? el("f-deskripsi").value.trim() : "",
-      catatan: type === "jasa" ? el("f-jasa-catatan").value.trim() : "",
-      prioritas: el("f-prioritas").value
-    });
 
+    /* ======== KATALOG OPTIONS ======== */
     function renderLayananOptions() {
       const opts = type === "jasa" ? TP.JASA_OPTIONS : TP.KELUHAN_OPTIONS;
       const sel = el("f-layanan");
@@ -242,30 +262,366 @@
     }
     function syncDesc() {
       const s = TP.svc(el("f-layanan").value);
-      el("layanan-desc").textContent = s ? s.desc : "";
+      el("layanan-desc").textContent = s ? s.deskripsi : "";
       el("layanan-desc").classList.toggle("hidden", !s);
       el("type-hint").textContent = type === "jasa" ? "— pilih jenis jasa" : "— pilih jenis keluhan";
-      el("detail-label").textContent = type === "jasa"
-        ? "Detail kebutuhan jasa * (mis. lokasi titik, spesifikasi, dokumen)"
-        : "Detail keluhan * (apa yang terjadi, sejak kapan, kondisi terkini)";
-      el("f-jasa-catatan-wrap").classList.toggle("hidden", type !== "jasa");
+      el("btnSvcDetail").classList.toggle("hidden", !s);
     }
+    function currentSvc() {
+      return TP.svc(el("f-layanan").value);
+    }
+
+    /* ======== FORMULIR DINAMIS ======== */
+    function fieldHtml(f) {
+      const req = f.required ? " required" : "";
+      const hint = f.hint ? `<span class="fhint">${f.hint}</span>` : "";
+      let input = "";
+      if (f.type === "textarea") {
+        input = `<textarea class="textarea" data-key="${f.key}"${req} placeholder="${f.placeholder || ""}"></textarea>`;
+      } else if (f.type === "select") {
+        input = `<select class="select" data-key="${f.key}"${req}>` +
+          "<option value=''>— Pilih —</option>" +
+          (f.options || []).map((o) => `<option>${o}</option>`).join("") +
+          "</select>";
+      } else if (f.type === "date") {
+        input = `<input class="input" type="date" data-key="${f.key}"${req}>`;
+      } else {
+        input = `<input class="input" type="${f.type === "number" ? "number" : "text"}" data-key="${f.key}"${req} placeholder="${f.placeholder || ""}">`;
+      }
+      return `<div class="field"><label>${f.label}${f.required ? " *" : ""}</label>${input}${hint}</div>`;
+    }
+    function renderServiceForm() {
+      const s = currentSvc();
+      const wrap = el("svc-form");
+      if (type === "jasa") {
+        wrap.innerHTML = (s.formSchema || []).map(fieldHtml).join("");
+      } else {
+        wrap.innerHTML = fieldHtml({ key: "keluhan", label: "Detail keluhan *", type: "textarea", required: true, placeholder: "Jelaskan apa yang terjadi, sejak kapan, dan kondisi terkini..." });
+      }
+    }
+    function collectFormData() {
+      const data = {};
+      el("svc-form").querySelectorAll("[data-key]").forEach((inp) => {
+        if (inp.value && inp.value.trim()) data[inp.dataset.key] = inp.value.trim();
+      });
+      return data;
+    }
+
+    /* ======== SYARAT / KONTRAK / JENIS PELANGGAN ======== */
+    function renderSyarat() {
+      const s = currentSvc();
+      const area = el("syarat-area");
+      if (type === "keluhan") {
+        area.innerHTML = '<div class="ck-note">Keluhan diproses langsung oleh petugas tanpa syarat, kontrak, atau jenis pelanggan tambahan. Anda tinggal melanjutkan ke tahap dokumen &amp; ringkasan.</div>';
+        return;
+      }
+      const jpIds = s.jenisPelanggan || [];
+      const syaratList = s.syarat || [];
+
+      const jpCards = jpIds.map((jid) => {
+        const j = TP.jpById(jid);
+        if (!j) return "";
+        const active = selJenis === jid ? " active" : "";
+        return `<button type="button" class="jp-opt${active}" data-jp="${jid}">
+          <b>${j.nama} <span class="chip blue">${j.id}</span></b>
+          <small>${j.golongan} · ${j.blok}</small>
+        </button>`;
+      }).join("");
+
+      const syaratItems = syaratList.map((sy) =>
+        `<li><input type="checkbox" value="${sy.id}" ${syaratChecked.indexOf(sy.id) >= 0 ? "checked" : ""}> <span>${sy.teks}${sy.wajib ? " <span class='opt-mark'>wajib</span>" : ""}</span></li>`
+      ).join("");
+
+      const kontrakItems = TP.KONTRAK_PELANGGAN.map((k) =>
+        `<li><input type="checkbox" value="${k.id}" ${kontrakChecked.indexOf(k.id) >= 0 ? "checked" : ""}> <span>${k.teks}</span></li>`
+      ).join("");
+
+      area.innerHTML =
+        '<div class="ck-head"><h4>Jenis Pelanggan</h4><a href="#" onclick="event.preventDefault();TP.openServiceModal(\'' + s.id + '\')">Lihat rincian →</a></div>' +
+        '<div class="jp-select">' + jpCards + "</div>" +
+        '<div class="ck-head"><h4>Syarat &amp; Ketentuan</h4><a href="#" onclick="event.preventDefault();TP.openServiceModal(\'' + s.id + '\')">Lihat rincian →</a></div>' +
+        '<ul class="check-list">' + syaratItems + "</ul>" +
+        '<div class="ck-head"><h4>Kontrak Pelanggan (Hak &amp; Kewajiban)</h4><a href="#" onclick="event.preventDefault();TP.openServiceModal(\'' + s.id + '\')">Lihat rincian →</a></div>' +
+        '<ul class="check-list">' + kontrakItems + "</ul>";
+
+      area.querySelectorAll(".jp-opt").forEach((b) => {
+        b.addEventListener("click", () => {
+          selJenis = b.dataset.jp;
+          area.querySelectorAll(".jp-opt").forEach((x) => x.classList.toggle("active", x === b));
+        });
+      });
+      area.querySelectorAll(".check-list input").forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const ul = cb.closest("ul");
+          const prevHead = ul.previousElementSibling;
+          const isKontrak = prevHead && prevHead.classList.contains("ck-head") && prevHead.textContent.indexOf("Kontrak") >= 0;
+          const list = isKontrak ? kontrakChecked : syaratChecked;
+          if (cb.checked) { if (list.indexOf(cb.value) < 0) list.push(cb.value); }
+          else { const i = list.indexOf(cb.value); if (i >= 0) list.splice(i, 1); }
+        });
+      });
+    }
+
+    /* ======== DOKUMEN ======== */
+    function initDoks() {
+      const s = currentSvc();
+      if (type === "jasa") {
+        doks = (s.dokumen || []).map((d) => ({ id: d.id, nama: d.nama, wajib: d.wajib, status: "belum", file: null }));
+      } else {
+        doks = [{ id: "foto", nama: "Foto / Bukti Kejadian (opsional)", wajib: false, status: "belum", file: null }];
+      }
+      doksFor = s.id;
+    }
+    function docMeta(d) {
+      if (d.status === "unggah") return { label: "Diupload", chip: "teal" };
+      if (d.status === "siap") return { label: "Siap", chip: "blue" };
+      return { label: "Belum", chip: "gray" };
+    }
+    function renderDoks() {
+      const s = currentSvc();
+      if (doksFor !== s.id) initDoks();
+      const box = el("dokumen-box");
+      const totalWajib = doks.filter((d) => d.wajib).length;
+      const doneWajib = doks.filter((d) => d.wajib && d.status !== "belum").length;
+      el("doc-progress").style.width = totalWajib ? Math.round((doneWajib / totalWajib) * 100) + "%" : "0%";
+
+      box.innerHTML = doks.map((d, i) => {
+        const m = docMeta(d);
+        const file = d.file ? `<span class="doc-file">▤ ${d.file.name} (${(d.file.size / 1024).toFixed(0)} KB)</span>` : "";
+        return `<div class="doc-row">
+          <span class="chip ${m.chip}">${m.label}</span>
+          <div><b>${d.nama}</b>${d.wajib ? " <span class='req-mark'>wajib</span>" : " <span class='opt-mark'>opsional</span>"}${file ? "<br>" + file : ""}</div>
+          <div class="doc-actions">
+            <label class="upload-mini" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+              <input class="hidden" type="checkbox" ${d.status !== "belum" ? "checked" : ""} data-idx="${i}" data-action="siap">
+              <span>☑ Siap</span>
+            </label>
+            <label class="btn ghost small" style="cursor:pointer">
+              ⇪ Unggah
+              <input class="hidden" type="file" data-idx="${i}" data-action="file" accept=".jpg,.jpeg,.png,.pdf">
+            </label>
+            ${d.status === "unggah" ? `<button type="button" class="btn small danger ghost" data-idx="${i}" data-action="hapus">✕</button>` : ""}
+          </div>
+        </div>`;
+      }).join("");
+
+      box.querySelectorAll("[data-action='siap']").forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const idx = Number(cb.dataset.idx);
+          doks[idx].status = cb.checked ? "siap" : "belum";
+          if (cb.checked && doks[idx].file) doks[idx].file = null;
+          renderDoks();
+        });
+      });
+      box.querySelectorAll("[data-action='file']").forEach((inp) => {
+        inp.addEventListener("change", async () => {
+          const f = inp.files && inp.files[0];
+          if (!f) return;
+          if (f.size > MAX_FILE) { TP.toast("Ukuran file maksimal 1 MB.", "error"); inp.value = ""; return; }
+          const idx = Number(inp.dataset.idx);
+          let dataUrl = null;
+          try {
+            if (f.size <= 400 * 1024) {
+              dataUrl = await new Promise((res) => {
+                const r = new FileReader();
+                r.onload = () => res(r.result);
+                r.onerror = () => res(null);
+                r.readAsDataURL(f);
+              });
+            }
+          } catch (e) { dataUrl = null; }
+          doks[idx].file = { name: f.name, size: f.size, dataUrl: dataUrl };
+          doks[idx].status = "unggah";
+          if (dataUrl === null) TP.toast("File > 400KB disimpan metadata saja (tanpa isi).");
+          renderDoks();
+        });
+      });
+      box.querySelectorAll("[data-action='hapus']").forEach((b) => {
+        b.addEventListener("click", () => {
+          const idx = Number(b.dataset.idx);
+          doks[idx].file = null;
+          doks[idx].status = "belum";
+          renderDoks();
+        });
+      });
+    }
+
+    /* ======== RINGKASAN KEBUTUHAN ======== */
+    function formatFieldVal(jasa, key, val) {
+      const f = (jasa.formSchema || []).find((x) => x.key === key);
+      if (f && f.type === "select") {
+        const opt = (f.options || []).find((o) => o === val);
+        if (opt) return opt;
+      }
+      return val;
+    }
+    function renderRingkasan() {
+      const box = el("ringkasan-box");
+      const s = currentSvc();
+      if (type === "keluhan") {
+        const det = (el("svc-form").querySelector("[data-key='keluhan']") || {}).value || "";
+        box.innerHTML = "Keluhan: <b>" + s.nama + "</b> — " + det + "<br>Prioritas: <b>" + el("f-prioritas").value + "</b>";
+        return;
+      }
+      const fdata = collectFormData();
+      const totalWajib = doks.filter((d) => d.wajib).length;
+      const doneWajib = doks.filter((d) => d.wajib && d.status !== "belum").length;
+      const lines = [];
+      lines.push(s.ringkasanIntro || s.deskripsi);
+      const used = (s.formSchema || []).filter((f) => fdata[f.key]);
+      if (used.length) {
+        lines.push("<ul class='sum-list'>" + used.map((f) => "<li><b>" + f.label + ":</b> " + escapeHtml(formatFieldVal(s, f.key, fdata[f.key])) + "</li>").join("") + "</ul>");
+      }
+      if (selJenis) {
+        const j = TP.jpById(selJenis);
+        lines.push("<div><b>Jenis Pelanggan:</b> " + (j ? j.nama + " (" + j.id + ")" : selJenis) + "</div>");
+      }
+      if (totalWajib > 0) {
+        lines.push("<div><b>Kelengkapan dokumen wajib:</b> " + doneWajib + " dari " + totalWajib + " berkas telah disiapkan</div>");
+      }
+      lines.push("<div class='muted'><b>Estimasi biaya indikatif:</b> " + s.estimasi + "</div>");
+      box.innerHTML = lines.join("<br>");
+    }
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    /* ======== KONFIRMASI ======== */
     function renderSummary() {
-      const q = serialize();
-      const chips = [];
-      chips.push('<span class="chip blue">' + (q.type === "jasa" ? "Jasa" : "Keluhan") + "</span>");
-      chips.push('<span class="chip amber">Prioritas: ' + q.prioritas + "</span>");
+      const s = currentSvc();
+      const chips = ['<span class="chip blue">' + (type === "jasa" ? "Jasa" : "Keluhan") + "</span>",
+        '<span class="chip amber">Prioritas: ' + el("f-prioritas").value + "</span>"];
+      const totalWajib = doks.filter((d) => d.wajib).length;
+      const doneWajib = doks.filter((d) => d.wajib && d.status !== "belum").length;
       const body =
         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">' + chips.join("") + "</div>" +
-        "<b>" + q.nmLayanan + "</b><br>" +
-        "<div class='small muted' style='margin-top:4px'>" + q.nama + " • " + q.noHP + " • " + q.zona + " • No. Pel: " + q.noPelanggan + "</div>" +
+        "<b>" + s.nama + "</b><br>" +
+        "<div class='small muted' style='margin-top:4px'>" + el("f-nama").value + " • " + el("f-nohp").value + " • " + el("f-zona").value + " • No. Pel: " + (el("f-nopel").value || "—") + "</div>" +
+        (selJenis && type === "jasa" ? "<div class='small muted'>Jenis pelanggan: " + (TP.jpById(selJenis) ? TP.jpById(selJenis).nama + " (" + selJenis + ")" : selJenis) + "</div>" : "") +
         "<hr style='border:none;border-top:1px solid var(--gray-200);margin:10px 0'>" +
-        "<div class='small'><b>Detail:</b><br>" + q[jsonKey(q.type)] + "</div>" +
-        (q.catatan ? "<div class='small muted' style='margin-top:6px'><b>Catatan:</b> " + q.catatan + "</div>" : "");
+        "<div class='small'><b>Ringkasan:</b></div>" +
+        "<div class='small muted'>" + (el("ringkasan-box").textContent || "").slice(0, 220) + "…</div>" +
+        "<hr style='border:none;border-top:1px solid var(--gray-200);margin:10px 0'>" +
+        "<div class='small'>Dokumen wajib selesai: <b>" + doneWajib + " / " + totalWajib + "</b> · Syarat disetujui: <b>" + syaratChecked.length + "</b> · Kontrak disetujui: <b>" + kontrakChecked.length + "</b></div>";
       el("confirm-summary").innerHTML = body;
     }
-    function jsonKey(t) { return t === "jasa" ? "jasa" : "keluhan"; }
 
+    /* ======== NAVIGASI & VALIDASI ======== */
+    function setStepVis(n) {
+      step = n;
+      document.querySelectorAll(".step-pane").forEach((p) => p.classList.toggle("hidden", Number(p.dataset.pane) !== n));
+      document.querySelectorAll("#stepper .step").forEach((s) => {
+        const i = Number(s.dataset.step);
+        s.classList.toggle("active", i === n);
+        s.classList.toggle("done", i < n);
+      });
+    }
+    function formOkForCurrent() {
+      let ok = true;
+      const fields = Array.from(el("ticket-form").querySelectorAll("[required]"));
+      fields.forEach((inp) => {
+        const pane = inp.closest(".step-pane");
+        if (pane && pane.classList.contains("hidden")) return;
+        if (!inp.checkValidity()) {
+          ok = false;
+          if (inp.reportValidity) inp.reportValidity();
+          if (inp.focus) inp.focus();
+          return false;
+        }
+      });
+      return ok;
+    }
+    function formOkAll() {
+      let ok = true;
+      Array.from(el("ticket-form").querySelectorAll("[required]")).forEach((inp) => {
+        if (inp.checkValidity && !inp.checkValidity()) ok = false;
+      });
+      return ok;
+    }
+    function validateLeave(n) {
+      if (n === 1) {
+        return formOkForCurrent();
+      }
+      if (n === 2) {
+        return formOkForCurrent();
+      }
+      if (n === 3) {
+        if (type === "jasa") {
+          if (!selJenis) { TP.toast("Silakan pilih jenis pelanggan terlebih dahulu.", "error"); return false; }
+          const s = currentSvc();
+          if (syaratChecked.length < (s.syarat || []).length) { TP.toast("Centang seluruh poin Syarat &amp; Ketentuan.", "error"); return false; }
+          if (kontrakChecked.length < TP.KONTRAK_PELANGGAN.length) { TP.toast("Centang seluruh poin Kontrak Pelanggan.", "error"); return false; }
+        }
+        return true;
+      }
+      if (n === 4) {
+        initNil();
+        return true;
+      }
+      return true;
+    }
+    function initNil() {}
+
+    function go2(n) {
+      setStepVis(n);
+    }
+
+    /* ======== SUBMIT ======== */
+    function submitTicket() {
+      const s = currentSvc();
+      setStepVis(step);
+      if (!formOkAll()) {
+        if (el("ticket-form").reportValidity) el("ticket-form").reportValidity();
+        TP.toast("Lengkapi seluruh kolom wajib pada formulir layanan.", "error");
+        return;
+      }
+
+      const fdata = collectFormData();
+      const db = TP.DB.get();
+      const id = TP.uid("TPK-2026");
+      const ringkasan = (el("ringkasan-box").textContent || "").trim();
+      const ticket = {
+        id,
+        type,
+        idLayanan: el("f-layanan").value,
+        nmLayanan: s.nama,
+        nama: el("f-nama").value.trim(),
+        noHP: el("f-nohp").value.trim(),
+        alamat: el("f-alamat").value.trim(),
+        zona: el("f-zona").value,
+        noPelanggan: el("f-nopel").value.trim() || "—",
+        jasa: type === "jasa" ? "" : "",
+        keluhan: type === "keluhan" ? (fdata.keluhan || el("f-prioritas").value) : "",
+        catatan: el("f-catatan").value.trim(),
+        prioritas: el("f-prioritas").value,
+        jenisPelanggan: selJenis || "—",
+        formData: fdata,
+        syaratCheck: { jenisPelanggan: selJenis, syarat: syaratChecked.slice(), kontrak: kontrakChecked.slice() },
+        dokumen: doks.map((d) => ({ id: d.id, nama: d.nama, wajib: d.wajib, status: d.status, file: d.file ? { name: d.file.name, size: d.file.size } : null })),
+        ringkasan: ringkasan.trim(),
+        biaya: { nominal: null, catatan: "—" },
+        status: "Baru",
+        created: TP.todays(),
+        timeline: [{ date: TP.todays(), text: "Tiket dibuat oleh pelanggan" }],
+        reaction: null
+      };
+      db.tickets.unshift(ticket);
+      TP.DB.set(db);
+
+      el("ticket-form").reset();
+      selJenis = null; syaratChecked = []; kontrakChecked = []; doks = []; doksFor = "";
+      setStepVis(1);
+      renderTickets();
+      TP.toast("Tiket " + id + " berhasil dibuat!", "success");
+      TP.openTicketModal(id);
+      el("f-layanan").dispatchEvent(new Event("change"));
+    }
+
+    /* ======== DAFTAR TIKET ======== */
+    function dayNum(dstr) {
+      const p = dstr.split("/");
+      return new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0])).getTime();
+    }
     function renderTickets() {
       const db = TP.DB.get();
       const list = db.tickets.filter((t) => filter === "semua" || t.type === filter);
@@ -278,221 +634,81 @@
       wrap.innerHTML = list.map((t) => {
         const isJasa = t.type === "jasa";
         const sym = isJasa ? "▤" : "☏";
-        const chip = TP.STATUS_META[t.status] || "gray";
-        const pri = TP.PRIORITY_META[t.prioritas] || "gray";
-        return (
-          '<button class="ticket-row" data-id="' + t.id + '" onclick="selectTicket(\'' + t.id + '\')">' +
-            '<span class="t-symbol">' + sym + "</span>" +
-            '<div class="t-info">' +
-              "<div><span class='t-title'>" + t.id + " · " + t.nmLayanan + "</span>" +
-              "<div class='t-meta'>" + (isJasa ? "Layanan jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div>" +
-            "</div>" +
-            '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
-              '<span class="chip ' + pri.chip + '">' + t.prioritas + "</span>" +
-              '<span class="chip ' + chip.chip + '">' + t.status + "</span>" +
-            "</div>" +
-          "</button>"
-        );
+        const chip = TP.STATUS_META[t.status] || { chip: "gray" };
+        const pri = TP.PRIORITY_META[t.prioritas] || { chip: "gray" };
+        return '<button class="ticket-row" data-id="' + t.id + '" onclick="selectTicket(\'' + t.id + '\')">' +
+          '<span class="t-symbol">' + sym + "</span>" +
+          '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
+          "<div class='t-meta'>" + (isJasa ? "Layanan jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
+          '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pri.chip + '">' + t.prioritas + '</span><span class="chip ' + chip.chip + '">' + t.status + "</span></div></button>";
       }).join("");
     }
 
-    function dayNum(dstr) {
-      const p = dstr.split("/");
-      return new Date(Number(p[2]), Number(p[1]) - 1, Number(p[0])).getTime();
-    }
-
-    function selectTicket(id) {
-      editingTicket = id;
-      const db = TP.DB.get();
-      const t = db.tickets.find((x) => x.id === id);
-      if (!t) return;
-      const isJasa = t.type === "jasa";
-      const isKeluhan = t.type === "keluhan";
-      const statusFlow = isKeluhan ? TP.STATUS_FLOW_KELUHAN : TP.STATUS_FLOW;
-      const curIdx = statusFlow.indexOf(t.status);
-      const react = t.reaction;
-
-      el("modal-ticket-title").textContent = t.id + " — " + t.nmLayanan;
-
-      let statusLine = "";
-      if (curIdx >= 0) {
-        statusLine = statusFlow.map((s, i) => {
-          let cls = "step";
-          if (i < curIdx) cls += " done";
-          if (i === curIdx) cls += " active";
-          return '<div class="' + cls + '"><span class="n">' + (i + 1) + "</span>" + s + "</div>";
-        }).join("");
-      }
-
-      el("modal-ticket-body").innerHTML =
-        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">' +
-          '<span class="pill ' + (isJasa ? "teal" : "blue") + '">' + TP.SOURCE_TYPES[t.type] + "</span>" +
-          '<span class="pill ' + (TP.PRIORITY_META[t.prioritas] || {}).chip + '">Prioritas: ' + t.prioritas + "</span>" +
-          '<span class="pill ' + (TP.STATUS_META[t.status] || {}).chip + '">' + t.status + "</span>" +
-        "</div>" +
-        '<div class="mt-2 stepper" style="margin-bottom:8px">' + statusLine + "</div>" +
-        '<div class="form-grid-2" style="margin-top:8px">' +
-          "<div class='small'><b>Nama:</b> " + t.nama + "</div>" +
-          "<div class='small'><b>No. HP:</b> " + t.noHP + "</div>" +
-          "<div class='small'><b>Alamat:</b> " + t.alamat + "</div>" +
-          "<div class='small'><b>Zona:</b> " + t.zona + "</div>" +
-          "<div class='small'><b>No. Pelanggan:</b> " + t.noPelanggan + "</div>" +
-          "<div class='small'><b>Dibuat:</b> " + t.created + "</div>" +
-        "</div>" +
-        '<hr style="border:none;border-top:1px solid var(--gray-200);margin:14px 0">' +
-        "<div class='small'><b>" + (isJasa ? "Detail Permintaan Jasa" : "Detail Keluhan") + ":</b><br>" + (isJasa ? t.jasa : t.keluhan) + "</div>" +
-        (t.catatan ? "<div class='small muted' style='margin-top:6px'><b>Catatan:</b> " + t.catatan + "</div>" : "") +
-        "<hr style='border:none;border-top:1px solid var(--gray-200);margin:14px 0'>" +
-        "<h3 style='font-size:1rem'>Riwayat / Timeline</h3>" +
-        '<ul class="timeline">' +
-          t.timeline.map((tl, i) => {
-            const last = i === t.timeline.length - 1;
-            const cls = last ? ((t.status === "Selesai" || t.status === "Dibatalkan") ? "done" : "active") : "done";
-            return '<li class="' + cls + '"><span class="dot"></span><div class="tl-body"><time>' + tl.date + "</time><p>" + tl.text + "</p></div></li>";
-          }).join("") +
-        "</ul>" +
-        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;align-items:center">' +
-          (t.status !== "Dibatalkan" && t.status !== "Selesai"
-            ? '<button class="btn small" onclick="advanceTicket(\'' + t.id + '\')">→ Proses ke: ' + (statusFlow[curIdx + 1] || "Selesai") + "</button>"
-            : '') +
-          '<button class="btn small danger" onclick="cancelTicket(\'' + t.id + '\')">✕ Batalkan Ticket</button>' +
-        "</div>" +
-        "<hr style='border:none;border-top:1px solid var(--gray-200);margin:14px 0'>" +
-        "<div class='small'><b>Seberapa membantu layanan ini?</b></div>" +
-        '<div class="rate-stars" style="margin-top:4px">' +
-          [1, 2, 3, 4, 5].map((n) =>
-            '<button class="' + (react && react >= n ? "on" : "") + '" data-react="' + n + '" onclick="rateTicket(\'' + t.id + '\',' + n + ')">★</button>'
-          ).join("") +
-        "</div>";
-    }
-    window.selectTicket = selectTicket;
-
-    function advanceTicket(id) {
-      const db = TP.DB.get();
-      const t = db.tickets.find((x) => x.id === id);
-      if (!t) return;
-      const flow = t.type === "keluhan" ? TP.STATUS_FLOW_KELUHAN : TP.STATUS_FLOW;
-      const nxt = flow[flow.indexOf(t.status) + 1];
-      if (!nxt) return;
-      t.status = nxt;
-      if (!Array.isArray(t.timeline)) t.timeline = [];
-      t.timeline.push({ date: today(), text: "Status diperbarui: " + nxt });
-      TP.DB.set(db);
-      TP.toast("Ticket " + id + " sekarang: " + nxt, "success");
-      renderTickets();
-      selectTicket(id);
-    }
-    window.advanceTicket = advanceTicket;
-
-    function cancelTicket(id) {
-      const db = TP.DB.get();
-      const t = db.tickets.find((x) => x.id === id);
-      if (!t) return;
-      if (t.status === "Dibatalkan") { TP.toast("Ticket sudah dibatalkan.", "error"); return; }
-      if (t.status === "Selesai") { TP.toast("Ticket sudah selesai.", "error"); return; }
-      if (!confirm("Batalkan ticket " + id + "?")) return;
-      t.status = "Dibatalkan";
-      t.timeline.push({ date: today(), text: "Ticket dibatalkan oleh pelanggan" });
-      TP.DB.set(db);
-      TP.toast("Ticket " + id + " dibatalkan.", "success");
-      renderTickets();
-      selectTicket(id);
-    }
-    window.cancelTicket = cancelTicket;
-
-    function rateTicket(id, n) {
-      const db = TP.DB.get();
-      const t = db.tickets.find((x) => x.id === id);
-      if (!t) return;
-      t.reaction = t.reaction === n ? null : n;
-      TP.DB.set(db);
-      TP.toast(t.reaction ? "Terima kasih atas penilaian Anda! ⭐" : "Penilaian dibatalkan.", "success");
-      selectTicket(id);
-    }
-    window.rateTicket = rateTicket;
-
-    function today() {
-      return new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
-    }
-
-    function goStep(n) {
-      step = n;
-      document.querySelectorAll(".step-pane").forEach((p) => p.classList.toggle("hidden", Number(p.dataset.pane) !== n));
-      document.querySelectorAll("#stepper .step").forEach((s) => {
-        const i = Number(s.dataset.step);
-        s.classList.toggle("active", i === n);
-        s.classList.toggle("done", i < n);
-      });
-      if (n === 2) renderSummary();
-      if (n === 3) renderSummary();
-    }
-
-    function submitTicket() {
-      const f = el("ticket-form");
-      document.querySelectorAll(".step-pane").forEach((p) => p.classList.remove("hidden"));
-      if (!f.checkValidity()) {
-        f.reportValidity();
-        document.querySelectorAll(".step-pane").forEach((p) => p.classList.toggle("hidden", Number(p.dataset.pane) !== step));
-        return;
-      }
-      document.querySelectorAll(".step-pane").forEach((p) => p.classList.toggle("hidden", Number(p.dataset.pane) !== step));
-      const db = TP.DB.get();
-      const t = serialize();
-      const id = TP.uid("TPK-2026");
-      db.tickets.unshift({
-        id,
-        ...t,
-        status: "Baru",
-        created: today(),
-        timeline: [{ date: today(), text: "Tiket dibuat oleh pelanggan" }],
-        reaction: null
-      });
-      TP.DB.set(db);
-      f.reset();
-      goStep(1);
-      renderTickets();
-      TP.toast("Tiket " + id + " berhasil dibuat!", "success");
-      selectTicket(id);
-    }
-
-    el("f-layanan").addEventListener("change", syncDesc);
-    document.querySelectorAll('#typeSeg button').forEach((b) => {
+    /* ======== EVENT BINDINGS ======== */
+    el("f-layanan").addEventListener("change", () => {
+      syncDesc();
+      selJenis = null; syaratChecked = []; kontrakChecked = []; doks = []; doksFor = "";
+      if (type === "jasa") renderServiceForm();
+    });
+    document.querySelectorAll("#typeSeg button").forEach((b) => {
       b.addEventListener("click", () => {
         type = b.dataset.type;
-        document.querySelectorAll('#typeSeg button').forEach((x) => x.classList.toggle("active", x === b));
+        document.querySelectorAll("#typeSeg button").forEach((x) => x.classList.toggle("active", x === b));
         renderLayananOptions();
+        selJenis = null; syaratChecked = []; kontrakChecked = []; doks = []; doksFor = "";
+        renderServiceForm();
       });
     });
-    document.querySelectorAll('#filterSeg button').forEach((b) => {
+    document.querySelectorAll("#filterSeg button").forEach((b) => {
       b.addEventListener("click", () => {
         filter = b.dataset.filter;
-        document.querySelectorAll('#filterSeg button').forEach((x) => x.classList.toggle("active", x === b));
+        document.querySelectorAll("#filterSeg button").forEach((x) => x.classList.toggle("active", x === b));
         renderTickets();
       });
     });
-    el("toStep2").addEventListener("click", () => goStep(2));
-    el("toStep3").addEventListener("click", () => { syncDesc(); renderSummary(); goStep(3); });
-    el("backStep1").addEventListener("click", () => goStep(1));
-    el("backStep2").addEventListener("click", () => goStep(2));
+    el("btnSvcDetail").addEventListener("click", () => TP.openServiceModal(el("f-layanan").value));
+
+    el("toStep2").addEventListener("click", () => {
+      if (validateLeave(1)) { renderServiceForm(); go2(2); }
+    });
+    el("toStep3").addEventListener("click", () => {
+      if (validateLeave(2)) { renderSyarat(); go2(3); }
+    });
+    el("toStep4").addEventListener("click", () => {
+      if (validateLeave(3)) { renderDoks(); renderRingkasan(); go2(4); }
+    });
+    el("toStep5").addEventListener("click", () => {
+      const panesBefore = Array.from(document.querySelectorAll(".step-pane"));
+      const need = doks.filter((d) => d.wajib && d.status === "belum");
+      if (need.length) { TP.toast("Lengkapi dokumen wajib yang belum selesai.", "error"); return; }
+      if (type === "jasa" && !selJenis) { TP.toast("Jenis pelanggan belum dipilih.", "error"); return; }
+      renderSummary();
+      go2(5);
+    });
+    el("backStep1").addEventListener("click", () => go2(1));
+    el("backStep2").addEventListener("click", () => go2(2));
+    el("backStep3").addEventListener("click", () => go2(3));
+    el("backStep4").addEventListener("click", () => go2(4));
     el("ticket-form").addEventListener("submit", (e) => { e.preventDefault(); submitTicket(); });
 
+    /* ======== INIT ======== */
     const params = new URLSearchParams(location.search);
     if (params.get("type") === "keluhan") {
       type = "keluhan";
-      document.querySelectorAll('#typeSeg button').forEach((x) => x.classList.toggle("active", x.dataset.type === "keluhan"));
+      document.querySelectorAll("#typeSeg button").forEach((x) => x.classList.toggle("active", x.dataset.type === "keluhan"));
     } else if (params.get("type") === "jasa" && params.get("layanan")) {
       type = "jasa";
-      document.querySelectorAll('#typeSeg button').forEach((x) => x.classList.toggle("active", x.dataset.type === "jasa"));
-      renderLayananOptions();
+    }
+    renderLayananOptions();
+    if (params.get("type") === "jasa" && params.get("layanan")) {
       el("f-layanan").value = params.get("layanan");
       syncDesc();
     }
-    renderLayananOptions();
+    renderServiceForm();
     renderTickets();
-    goStep(1);
+    go2(1);
 
-    document.querySelectorAll('.menu-toggle').forEach((btn) => btn.addEventListener("click", () => el("mainNav").classList.toggle("open")));
-    document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener("click", () => el(b.dataset.close).classList.remove("open")));
+    document.querySelectorAll(".menu-toggle").forEach((btn) => btn.addEventListener("click", () => el("mainNav").classList.toggle("open")));
   })();
 </script>
 </body>

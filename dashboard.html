@@ -273,6 +273,7 @@
       };
       const initial = name.trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
       currentUser.initial = initial || "PA";
+      window.TP_CURRENT_ROLE = role;
       $("avatar-letter").textContent = currentUser.initial;
       $("user-name").textContent = currentUser.name;
       $("user-role").textContent = roleLabel();
@@ -293,6 +294,7 @@
     $("ssoGoogle").addEventListener("click", () => { TP.toast("Menghubungkan akun Google... ✓ (demo)", "success"); setTimeout(() => login("Budi Santoso"), 700); });
     $("logoutBtn").addEventListener("click", () => {
       currentUser = null;
+      window.TP_CURRENT_ROLE = null;
       localStorage.removeItem(SESSION_KEY);
       TP.toast("Anda telah keluar.", "success");
       $("dash-screen").classList.add("hidden");
@@ -385,11 +387,15 @@
       const sym = isJasa ? "▤" : "☏";
       const sm = TP.STATUS_META[t.status] || { chip: "gray" };
       const pm = TP.PRIORITY_META[t.prioritas] || { chip: "gray" };
+      const totW = (t.dokumen || []).filter((d) => d.wajib).length;
+      const doneW = (t.dokumen || []).filter((d) => d.wajib && d.status && d.status !== "belum").length;
+      const docChip = totW ? '<span class="chip ' + (doneW === totW ? "teal" : "amber") + '">▧ ' + doneW + "/" + totW + '</span>' : "";
       return '<button class="ticket-row" data-id="' + t.id + '" onclick="' + click + '">' +
         '<span class="t-symbol">' + sym + "</span>" +
         '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
         '<div class="t-meta">' + (isJasa ? "Jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pm.chip + '">' + t.prioritas + '</span><span class="chip ' + sm.chip + '">' + t.status + "</span></div></button>";
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + docChip +
+        '<span class="chip ' + pm.chip + '">' + t.prioritas + '</span><span class="chip ' + sm.chip + '">' + t.status + "</span></div></button>";
     }
     function renderRingkasanTiket() {
       const recent = TP.DB.get().tickets.slice(0, 3);
@@ -403,7 +409,6 @@
         ? all.map((t) => ticketRowHtml(t, "openTicket('" + t.id + "')")).join("")
         : '<p class="muted text-center" style="padding:20px 0">Belum ada tiket. Buat tiket baru dari Pusat Layanan.</p>';
     }
-    window.openTicket = function (id) { location.href = "ticketing.html"; };
 
     /* ---------- NOTIFIKASI ---------- */
     function renderNotif() {

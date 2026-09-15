@@ -536,3 +536,104 @@ table.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .role-picker { grid-template-columns: 1fr; }
 }
+
+/* ================= Perumda Tirta Pakuan — Layanan & Ticketing v2 ================= */
+
+/* ---------- Layanan detail (modal) ---------- */
+.svc-ico {
+  display: inline-grid; width: 34px; height: 34px; place-items: center;
+  background: var(--blue-50); color: var(--blue-600); border-radius: 10px; font-size: 1.1rem;
+}
+.svc-desc { color: var(--gray-600); font-size: 0.95rem; margin: 4px 0 14px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 2px solid var(--gray-200); margin-bottom: 16px; }
+.tabs-btn {
+  border: none; background: transparent; padding: 10px 14px; font-weight: 700;
+  font-size: 0.84rem; color: var(--gray-600); cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -2px; font-family: inherit;
+}
+.tabs-btn:hover { color: var(--blue-700); }
+.tabs-btn.active { color: var(--blue-700); border-bottom-color: var(--blue-600); }
+.tabs-pane { display: none; animation: fadeUp 0.2s; }
+.tabs-pane.active { display: block; }
+.rincian-item {
+  display: flex; gap: 10px; align-items: flex-start; padding: 11px 2px;
+  border-bottom: 1px solid var(--gray-200); font-size: 0.92rem; color: var(--gray-700);
+}
+.rincian-item .chip { flex: 0 0 auto; }
+.jp-card {
+  border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 13px 14px;
+  margin-bottom: 10px; background: #fff;
+}
+.jp-card > div:not(:last-child) { margin-bottom: 4px; }
+.est-badge {
+  background: var(--amber-bg); border: 1px solid #f3e3bd; border-radius: var(--radius-sm);
+  padding: 14px; color: #6b4a00; font-size: 0.92rem;
+}
+
+/* ---------- Wizard ceklis syarat / kontrak / jenis ---------- */
+.check-list { list-style: none; padding: 0; margin: 0; }
+.check-list li {
+  display: flex; gap: 10px; padding: 10px 2px; border-bottom: 1px solid var(--gray-100);
+  align-items: flex-start; font-size: 0.92rem; color: var(--gray-700);
+}
+.check-list li input { margin-top: 4px; flex: 0 0 16px; transform: scale(1.15); }
+.ck-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 18px 0 6px; }
+.ck-head h4 { margin: 0; font-size: 0.98rem; color: var(--blue-900); }
+.ck-head .ck-status { font-size: 0.78rem; color: var(--gray-500); font-weight: 600; }
+.jp-select { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.jp-opt {
+  border: 1.5px solid var(--gray-300); border-radius: var(--radius-sm); padding: 11px 13px;
+  cursor: pointer; background: #fff; text-align: left; font-family: inherit; transition: 0.15s;
+}
+.jp-opt:hover { border-color: var(--blue-500); }
+.jp-opt.active { border-color: var(--blue-600); background: var(--blue-50); }
+.jp-opt b { display: block; color: var(--gray-900); }
+.jp-opt small { color: var(--gray-500); }
+.ck-note {
+  background: var(--blue-50); border: 1px solid var(--blue-100); color: var(--blue-800);
+  border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.9rem; margin-bottom: 6px;
+}
+
+/* ---------- Dokumen persyaratan ---------- */
+.doc-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px solid var(--gray-100); }
+.doc-row .chip { flex: 0 0 auto; margin-top: 2px; }
+.doc-row .doc-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.doc-row input[type="checkbox"] { transform: scale(1.15); margin-top: 4px; }
+.doc-file { display: block; color: var(--gray-500); font-size: 0.78rem; margin-top: 2px; }
+.upload-mini { font-size: 0.75rem; color: var(--gray-500); }
+.req-mark { font-style: normal; font-size: 0.7rem; color: var(--danger); font-weight: 700; margin-left: 6px; }
+.opt-mark { font-style: normal; font-size: 0.7rem; color: var(--gray-500); font-weight: 700; margin-left: 6px; }
+.progress-doc { height: 8px; border-radius: 999px; background: var(--gray-200); overflow: hidden; margin-top: 8px; }
+.progress-doc > div { height: 100%; background: linear-gradient(90deg, var(--teal-500), var(--blue-600)); border-radius: 999px; transition: width .3s; }
+
+/* ---------- Ringkasan kebutuhan ---------- */
+.sum-body { font-size: 0.93rem; color: var(--gray-700); }
+.sum-list { margin: 8px 0 8px; padding-left: 18px; }
+.sum-list li { margin-bottom: 3px; }
+
+/* ---------- Ticket modal (shared) ---------- */
+.card.tcard { margin-bottom: 14px; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
+.stepper.sm { margin-bottom: 4px; }
+.stepper.sm .step { padding: 7px 6px; font-size: 0.76rem; }
+.ticket-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+.biaya-line { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--blue-900); }
+.biaya-edit { display: flex; gap: 8px; margin-top: 10px; }
+.biaya-edit input { flex: 1; min-width: 0; }
+
+/* ---------- Form schema dinamis ---------- */
+.fhint { display: block; color: var(--gray-500); font-size: 0.78rem; margin-top: 4px; }
+
+/* ---------- Print (alternative: cetak halaman modal) ---------- */
+@media print {
+  body * { visibility: hidden; }
+  #ticketModalShell, #ticketModalShell * { visibility: visible; }
+  #ticketModalShell { position: static; display: block; background: #fff; padding: 0; }
+  #ticketModalShell .modal { width: 100%; max-height: none; box-shadow: none; padding: 0; }
+  #ticketModalShell .ticket-actions, #ticketModalShell .rate-stars, #ticketModalShell .modal-close { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .jp-select { grid-template-columns: 1fr; }
+  .tabs-btn { flex: 1 1 40%; padding: 8px 6px; text-align: center; }
+}
