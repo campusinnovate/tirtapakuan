@@ -701,9 +701,12 @@
       type = "jasa";
     }
     renderLayananOptions();
-    if (params.get("type") === "jasa" && params.get("layanan")) {
-      el("f-layanan").value = params.get("layanan");
-      syncDesc();
+    if (params.get("layanan") && TP.svc(params.get("layanan"))) {
+      const selected = TP.svc(params.get("layanan"));
+      if ((type === "jasa" && selected.formSchema) || (type === "keluhan" && !selected.formSchema)) {
+        el("f-layanan").value = selected.id;
+        syncDesc();
+      }
     }
     renderServiceForm();
     renderTickets();
