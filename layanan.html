@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detail Layanan Jasa — Tirta Pakuan</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav-bar">
+  <a class="brand" href="index.html"><span class="brand-logo">♧</span><span>Perumda <b>Tirta Pakuan</b><small>Informasi layanan jasa</small></span></a>
+  <button class="menu-toggle" aria-label="Buka navigasi" aria-expanded="false">☰</button>
+  <nav class="nav-links" id="mainNav" aria-label="Navigasi utama"><a href="index.html">Beranda</a><a href="index.html#layanan">Semua layanan</a><a href="ticketing.html#daftar-tiket">Status tiket</a><a class="btn teal small" href="ticketing.html">Pusat layanan</a></nav>
+</div></header>
+<main class="service-detail-page"><div class="container">
+  <a class="service-back" href="index.html#layanan">← Kembali ke semua layanan</a>
+  <div id="service-detail"></div>
+</div></main>
+<footer class="site-footer"><div class="container footer-bottom"><span>© 2026 Perumda Tirta Pakuan Kota Bogor — Halaman pengembangan (dummy).</span><a href="ticketing.html#daftar-tiket">Daftar &amp; status tiket →</a></div></footer>
+<script src="js/main.js"></script>
+<script>
+(function () {
+  const id = new URLSearchParams(location.search).get('id');
+  const s = TP.JASA_DETAILS.find(item => item.id === id);
+  const root = document.getElementById('service-detail');
+  if (!s) { document.title = 'Layanan tidak ditemukan — Tirta Pakuan'; root.innerHTML = '<div class="detail-empty"><h1>Layanan tidak ditemukan</h1><p>Silakan pilih layanan dari daftar yang tersedia.</p><a class="btn" href="index.html#layanan">Lihat semua layanan</a></div>'; return; }
+  document.title = s.nama + ' — Tirta Pakuan';
+  const required = s.dokumen.filter(d => d.wajib);
+  root.innerHTML = `<div class="detail-hero"><span class="eyebrow">LAYANAN JASA / ${String(TP.JASA_DETAILS.indexOf(s) + 1).padStart(2, '0')}</span><h1>${s.nama}</h1><p>${s.deskripsi}</p><div class="detail-hero-actions"><a class="btn teal" href="ticketing.html?type=jasa&layanan=${s.id}#layanan-tiket">Ajukan layanan →</a><a class="btn ghost" href="ticketing.html#daftar-tiket">Lihat status tiket</a></div></div>
+  <div class="detail-layout"><div class="detail-main">
+    <section class="detail-section"><span class="detail-kicker">01 / ALUR PELAYANAN</span><h2>Bagaimana prosesnya?</h2><ol class="detail-process"><li><b>Isi permohonan</b><span>Lengkapi data pelanggan dan detail kebutuhan pada formulir tiket.</span></li><li><b>Verifikasi petugas</b><span>Dokumen dan kondisi teknis diperiksa sesuai jenis layanan.</span></li><li><b>Konfirmasi tindak lanjut</b><span>Pantau status tiket untuk informasi survei, biaya, dan penyelesaian.</span></li></ol></section>
+    <section class="detail-section"><span class="detail-kicker">02 / PERSIAPAN</span><h2>Dokumen yang disiapkan</h2><ul class="detail-checklist">${s.dokumen.map(d => `<li><span class="check-symbol">✓</span><span>${d.nama}</span><small>${d.wajib ? 'Wajib' : 'Jika diperlukan'}</small></li>`).join('')}</ul></section>
+    <section class="detail-section"><span class="detail-kicker">03 / KETENTUAN</span><h2>Yang perlu diketahui</h2><ul class="detail-terms">${s.syarat.map(x => `<li>${x.teks}</li>`).join('')}</ul></section>
+  </div><aside class="detail-side"><div class="detail-aside-card"><span class="detail-kicker">SEBELUM MENGAJUKAN</span><h3>Siapkan data Anda</h3><p>Formulir akan meminta identitas, nomor WhatsApp, alamat, serta rincian sesuai layanan yang dipilih.</p><div class="detail-fact"><b>${required.length} dokumen wajib</b><span>Periksa daftar dokumen di samping sebelum mengirim tiket.</span></div><a class="btn teal" href="ticketing.html?type=jasa&layanan=${s.id}#layanan-tiket">Mulai pengajuan →</a></div><div class="detail-aside-note"><b>Perkiraan biaya</b><p>${s.estimasi}</p><small>Nominal akhir mengikuti pemeriksaan dan konfirmasi petugas.</small></div></aside></div>`;
+  document.querySelector('.menu-toggle').addEventListener('click', function () { const nav = document.getElementById('mainNav'); const open = nav.classList.toggle('open'); this.setAttribute('aria-expanded', String(open)); });
+})();
+</script>
+</body>
+</html>

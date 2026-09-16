@@ -637,3 +637,79 @@ table.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
   .jp-select { grid-template-columns: 1fr; }
   .tabs-btn { flex: 1 1 40%; padding: 8px 6px; text-align: center; }
 }
+/* Katalog layanan jasa */
+.service-catalog { gap: 16px; }
+.service-card--detail { min-height: 265px; padding: 23px; box-shadow: none; cursor: default; gap: 0; }
+.service-card--detail:hover { transform: translateY(-2px); }
+.service-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+.service-number { color: var(--gray-500); font-size: .74rem; font-weight: 800; letter-spacing: .12em; }
+.service-icon { width: 48px; height: 48px; background: #e8f5f8; color: var(--blue-800); border-radius: 12px; display: grid; place-items: center; }
+.service-icon svg { width: 27px; height: 27px; }
+.service-card--detail h3 { font-size: 1.09rem; color: var(--blue-900); }
+.service-card--detail p { font-size: .9rem; line-height: 1.5; margin: 7px 0 4px; color: var(--gray-700); }
+.service-card--detail small { line-height: 1.5; font-size: .8rem; }
+.service-detail-link { margin-top: auto; padding-top: 18px; color: var(--blue-700); font-weight: 750; font-size: .87rem; display: inline-flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--blue-100); width: fit-content; gap: 15px; }
+.service-detail-link:hover { color: var(--teal-600); border-color: var(--teal-600); }
+
+/* Halaman detail layanan */
+.service-detail-page { padding: 36px 0 80px; background: #f5f8fb; }
+.service-back { color: var(--blue-700); font-size: .86rem; font-weight: 700; }
+.detail-hero { margin: 26px 0 22px; padding: clamp(28px, 5vw, 56px); background: var(--blue-900); color: #fff; border-radius: 18px; }
+.detail-hero .eyebrow { color: #91dce2; }
+.detail-hero h1 { color: #fff; font-size: clamp(2rem, 4vw, 3.2rem); margin: 12px 0; max-width: 780px; }
+.detail-hero p { color: #d8e5f1; max-width: 760px; line-height: 1.7; }
+.detail-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.detail-hero-actions .ghost { color: #fff; border-color: #99aec6; }
+.detail-layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(270px, 1fr); gap: 20px; align-items: start; }
+.detail-main { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 4px clamp(22px, 4vw, 38px); }
+.detail-section { padding: 27px 0; border-bottom: 1px solid var(--gray-200); }
+.detail-section:last-child { border-bottom: 0; }
+.detail-kicker { color: var(--teal-600); font-size: .7rem; font-weight: 800; letter-spacing: .13em; }
+.detail-section h2 { margin: 8px 0 18px; color: var(--blue-900); font-size: 1.35rem; }
+.detail-process { list-style: none; counter-reset: process; padding: 0; margin: 0; display: grid; gap: 15px; }
+.detail-process li { counter-increment: process; display: grid; grid-template-columns: 36px 1fr; gap: 2px 12px; }
+.detail-process li::before { content: counter(process, decimal-leading-zero); grid-row: span 2; color: var(--teal-600); font-weight: 800; font-size: .85rem; }
+.detail-process li span { color: var(--gray-600); font-size: .87rem; line-height: 1.55; }
+.detail-checklist { list-style: none; margin: 0; padding: 0; }
+.detail-checklist li { display: flex; gap: 10px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--gray-100); font-size: .9rem; }
+.detail-checklist li:last-child { border-bottom: 0; }
+.detail-checklist li small { margin-left: auto; white-space: nowrap; color: var(--gray-500); }
+.check-symbol { color: var(--teal-600); font-weight: 800; }
+.detail-terms { margin: 0; padding-left: 20px; color: var(--gray-700); font-size: .9rem; line-height: 1.65; }
+.detail-terms li { margin-bottom: 9px; }
+.detail-aside-card, .detail-aside-note { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 25px; margin-bottom: 16px; }
+.detail-aside-card h3 { margin: 8px 0; color: var(--blue-900); }
+.detail-aside-card p, .detail-aside-note p { color: var(--gray-600); font-size: .88rem; line-height: 1.65; }
+.detail-fact { border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); padding: 16px 0; margin: 17px 0; }
+.detail-fact b, .detail-fact span { display: block; }
+.detail-fact span, .detail-aside-note small { color: var(--gray-500); font-size: .78rem; line-height: 1.5; margin-top: 4px; }
+.detail-aside-card .btn { width: 100%; text-align: center; }
+.detail-empty { margin: 60px 0; padding: 40px; background: #fff; border-radius: 16px; }
+
+/* Bantuan WhatsApp */
+.wa-widget { position: fixed; z-index: 1000; right: 22px; bottom: 22px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.wa-fab { width: 58px; height: 58px; border: 0; border-radius: 50%; color: #fff; background: #168c5c; display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px #0b513557; }
+.wa-fab:hover { background: #08744a; }
+.wa-fab svg { width: 30px; height: 30px; }
+.wa-menu { width: min(330px, calc(100vw - 35px)); border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 16px 45px #12274530; border: 1px solid var(--gray-200); }
+.wa-menu[hidden] { display: none; }
+.wa-menu-head { background: #106843; color: #fff; padding: 18px; }
+.wa-menu-head strong, .wa-menu-head span { display: block; }
+.wa-menu-head span { font-size: .8rem; margin-top: 3px; opacity: .85; }
+.wa-menu button, .wa-menu a { display: flex; width: 100%; align-items: center; gap: 13px; text-align: left; padding: 15px 18px; border: 0; border-bottom: 1px solid var(--gray-100); background: #fff; color: var(--gray-900); cursor: pointer; font: inherit; }
+.wa-menu button:hover, .wa-menu a:hover { background: #eff8f3; }
+.wa-menu button > span:first-child, .wa-menu a > span:first-child { color: #168c5c; font-size: 1.2rem; }
+.wa-menu b, .wa-menu small { display: block; }
+.wa-menu b { font-size: .89rem; }
+.wa-menu small { color: var(--gray-500); font-size: .75rem; margin-top: 2px; }
+.wa-ticket-btn { background: #168c5c; border-color: #168c5c; color: #fff; }
+.wa-ticket-btn:hover { background: #08744a; border-color: #08744a; }
+.ticket-list-item { display: flex; align-items: stretch; gap: 9px; margin-bottom: 12px; }
+.ticket-list-item .ticket-row { flex: 1; margin-bottom: 0; }
+.ticket-list-item .wa-ticket-btn { align-self: stretch; max-width: 170px; }
+@media (max-width: 760px) { .detail-layout { grid-template-columns: 1fr; } .ticket-list-item { flex-direction: column; } .ticket-list-item .wa-ticket-btn { max-width: none; } }
+@media (max-width: 640px) { .wa-widget { right: 16px; bottom: 16px; } }
+@media print { .wa-widget { display: none !important; } }
+.service-shortcuts { margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; color: var(--gray-600); font-size: .88rem; }
+.service-shortcuts a { color: var(--blue-700); font-weight: 750; }
+.service-shortcuts a:hover { text-decoration: underline; }

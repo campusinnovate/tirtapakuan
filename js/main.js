@@ -740,6 +740,7 @@
           </div>
 
           <div class="ticket-actions">
+            <button class="btn small wa-ticket-btn" onclick="TP.waTicket('${t.id}')">Cek progress tiket via WhatsApp ↗</button>
             ${canReject ? `<button class="btn small danger ghost" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Kurang Berkas</button>` : ""}
             ${!endStatus && nxt ? `<button class="btn small" onclick="TP.advanceTicket('${t.id}')">→ Proses ke: ${nxt}</button>` : ""}
             ${!endStatus && !isStaff ? `<button class="btn small danger" onclick="TP.cancelTicket('${t.id}')">✕ Batalkan Tiket</button>` : ""}
@@ -963,6 +964,38 @@
     panes.forEach((p, i) => p.classList.toggle("active", i === idx));
   }
 
+  const WA_NUMBER = "6285810818437";
+  function waUrl(message) {
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message);
+  }
+  function waChat() {
+    window.open(waUrl("Halo CS Tirta Pakuan, saya ingin bertanya tentang layanan pelanggan."), "_blank", "noopener,noreferrer");
+  }
+  function waTicket(id) {
+    const t = DB.get().tickets.find((item) => item.id === id);
+    if (!t) { toast("Tiket tidak ditemukan.", "error"); return; }
+    const message = `Halo CS Tirta Pakuan, saya ${t.nama} (No. Pelanggan: ${t.noPelanggan || "—"}). Mohon informasi progress tiket ${t.id} untuk ${t.nmLayanan}. Terima kasih.`;
+    window.open(waUrl(message), "_blank", "noopener,noreferrer");
+  }
+  function initWaWidget() {
+    const widget = document.createElement("div");
+    widget.className = "wa-widget";
+    widget.innerHTML = `<div class="wa-menu" id="wa-menu" hidden>
+      <div class="wa-menu-head"><strong>Bantuan Tirta Pakuan</strong><span>Hubungi CS melalui WhatsApp</span></div>
+      <button type="button" data-wa-chat><span>✆</span><span><b>Chat dengan CS</b><small>Tanya layanan atau sampaikan keluhan</small></span></button>
+      <a href="ticketing.html#daftar-tiket"><span>▤</span><span><b>Cek progress tiket</b><small>Pilih tiket, lalu kirim pertanyaan via WA</small></span></a>
+    </div><button type="button" class="wa-fab" aria-label="Buka bantuan WhatsApp" aria-expanded="false" aria-controls="wa-menu"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 .8A15.1 15.1 0 0 0 3 23.6L.9 31l7.6-2A15.2 15.2 0 1 0 16 .8Zm0 27.7a12.4 12.4 0 0 1-6.3-1.7l-.5-.3-4.5 1.2 1.2-4.4-.3-.5A12.4 12.4 0 1 1 16 28.5Zm6.8-9.3c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.4-.2.2-.5.3-.9.1a10.2 10.2 0 0 1-3-1.9 11.4 11.4 0 0 1-2.1-2.6c-.2-.4 0-.6.2-.8l.7-.8c.2-.2.3-.4.4-.7.1-.2 0-.5 0-.7l-1.2-2.8c-.3-.7-.6-.6-.9-.6h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.4 3.9 1.6 4.2c.2.3 2.8 4.3 6.8 6 1 .4 1.8.7 2.4.9 1 .3 1.9.2 2.6.1.8-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5Z"/></svg></button>`;
+    document.body.appendChild(widget);
+    const fab = widget.querySelector(".wa-fab");
+    const menu = widget.querySelector(".wa-menu");
+    fab.addEventListener("click", () => { menu.hidden = !menu.hidden; fab.setAttribute("aria-expanded", String(!menu.hidden)); });
+    widget.querySelector("[data-wa-chat]").addEventListener("click", waChat);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { menu.hidden = true; fab.setAttribute("aria-expanded", "false"); } });
+    document.addEventListener("click", (e) => { if (!widget.contains(e.target)) { menu.hidden = true; fab.setAttribute("aria-expanded", "false"); } });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initWaWidget);
+  else initWaWidget();
+
   /* ---------------- Compatibility wrappers (used by old onclick) ---------------- */
   window.selectTicket = openTicketModal;
   window.advanceTicket = advanceTicket;
@@ -1013,6 +1046,8 @@
     cancelTicket,
     rateTicket,
     printTicket,
+    waChat,
+    waTicket,
     tab: tabCtrl,
     LS_KEY,
     PAKET_JASA

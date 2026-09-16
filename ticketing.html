@@ -49,7 +49,7 @@
         <div class="card-header">
           <div>
             <h3>☏ Daftar &amp; Status Tiket Anda</h3>
-            <div class="sub">Pilih tiket untuk melihat ringkasan kebutuhan, kelengkapan berkas, riwayat, dan status terbaru.</div>
+          <div class="sub">Pilih tiket untuk melihat status terbaru, atau tekan Cek progress tiket untuk mengirim pertanyaan ke CS melalui WhatsApp.</div>
           </div>
           <div class="seg" id="filterSeg">
             <button data-filter="semua" class="active">Semua</button>
@@ -636,11 +636,12 @@
         const sym = isJasa ? "▤" : "☏";
         const chip = TP.STATUS_META[t.status] || { chip: "gray" };
         const pri = TP.PRIORITY_META[t.prioritas] || { chip: "gray" };
-        return '<button class="ticket-row" data-id="' + t.id + '" onclick="selectTicket(\'' + t.id + '\')">' +
+        return '<div class="ticket-list-item"><button class="ticket-row" data-id="' + t.id + '" onclick="selectTicket(\'' + t.id + '\')">' +
           '<span class="t-symbol">' + sym + "</span>" +
           '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
           "<div class='t-meta'>" + (isJasa ? "Layanan jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
-          '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pri.chip + '">' + t.prioritas + '</span><span class="chip ' + chip.chip + '">' + t.status + "</span></div></button>";
+          '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pri.chip + '">' + t.prioritas + '</span><span class="chip ' + chip.chip + '">' + t.status + "</span></div></button>" +
+          '<button type="button" class="btn small wa-ticket-btn" onclick="TP.waTicket(\'' + t.id + '\')">Cek progress tiket ↗</button></div>';
       }).join("");
     }
 
