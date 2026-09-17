@@ -85,11 +85,6 @@
     { id: "k8", teks: "Hak perusahaan: menghentikan sementara aliran apabila terjadi tunggakan rekening sesuai ketentuan yang berlaku." }
   ];
 
-  /* ---------------- Basis dokumen persyaratan ---------------- */
-  const D_KTP = { id: "ktp", nama: "Fotokopi KTP Pemohon", wajib: true };
-  const D_KK = { id: "kk", nama: "Fotokopi Kartu Keluarga (KK)", wajib: true };
-  const D_NOPEL = { id: "nopel", nama: "Nomor Pelanggan / Bukti Kepemilikan Rekening", wajib: true };
-
   const jelPel = () => JENIS_PELANGGAN.map((j) => j.id + " — " + j.nama);
 
   /* ---------------- Katalog layanan jasa (form khusus + checklist) ---------------- */
@@ -98,8 +93,8 @@
       id: "jasa-pasang",
       nama: "Pemasangan Baru",
       icon: "⌂",
-      deskripsi: "Pengajuan sambungan air bersih baru untuk rumah tinggal, ruko, tempat ibadah, atau instansi. Proses diawali dengan verifikasi berkas, survei lapangan, penetapan biaya, dan diakhiri dengan pemasangan sambungan aktif.",
-      ringkasanIntro: "Permohonan sambungan air bersih baru yang akan diproses melalui verifikasi berkas, survei lapangan, dan pemasangan.",
+      deskripsi: "Pengajuan sambungan air bersih baru untuk rumah tinggal, ruko, tempat ibadah, atau instansi. Proses diawali dengan verifikasi data, survei lapangan, penetapan biaya, dan diakhiri dengan pemasangan sambungan aktif.",
+      ringkasanIntro: "Permohonan sambungan air bersih baru yang akan diproses melalui verifikasi data, survei lapangan, dan pemasangan.",
       estimasi: "Biaya sambungan baru ±Rp 650.000 – 2.500.000 tergantung golongan pelanggan, diameter pipa, dan jarak titik sambungan (hasil survei). Termasuk meter & aksesoris.",
       formSchema: [
         { key: "jenis_bangunan", label: "Jenis Bangunan", type: "select", required: true, options: ["Rumah Tinggal", "Ruko", "Tempat Ibadah", "Instansi / Perkantoran", "Lainnya"] },
@@ -114,18 +109,11 @@
       syarat: [
         { id: "s1", teks: "Pemohon berdomisili dalam wilayah pelayanan Perumda Tirta Pakuan Kota Bogor.", wajib: true },
         { id: "s2", teks: "Lokasi sambungan berada dalam jangkauan jaringan pipa distribusi yang tersedia.", wajib: true },
-        { id: "s3", teks: "Data dan dokumen yang disampaikan adalah benar dan dapat diverifikasi petugas.", wajib: true },
+        { id: "s3", teks: "Data yang disampaikan adalah benar dan dapat diverifikasi petugas.", wajib: true },
         { id: "s4", teks: "Tidak sedang dalam sengketa kepemilikan lahan/bangunan pada lokasi sambungan.", wajib: true },
         { id: "s5", teks: "Satu bangunan berlaku untuk satu sambungan; sambungan tambahan mengikuti ketentuan.", wajib: true },
         { id: "s6", teks: "Pelunasan biaya sambungan dilakukan setelah estimasi dikeluarkan petugas survei.", wajib: true },
         { id: "s7", teks: "Petugas berhak menolak permohonan bila lokasi tidak terjangkau jaringan atau secara teknis tidak memungkinkan.", wajib: false }
-      ],
-      dokumen: [
-        D_KTP, D_KK,
-        { id: "sertif_tanah", nama: "Fotokopi Bukti Kepemilikan Tanah / Akta Jual Beli", wajib: true },
-        { id: "pbb", nama: "Bukti PBB Tahun Berjalan / SK Pengurang", wajib: true },
-        { id: "denah", nama: "Denah Lokasi / Peta Titik Sambungan", wajib: true },
-        { id: "imb", nama: "IMB / Akta Pendirian (untuk instansi & usaha)", wajib: false }
       ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI"]
     },
@@ -150,10 +138,6 @@
         { id: "s3", teks: "Biaya pengujian/penggantian mengikuti tarif yang berlaku dan dibayarkan sebelum pengerjaan.", wajib: true },
         { id: "s4", teks: "Selama penggantian meter, pemakaian dicatat berdasarkan pembacaan meter sebelum penggantian.", wajib: true }
       ],
-      dokumen: [
-        D_KTP, D_NOPEL,
-        { id: "foto_meter", nama: "Foto Kondisi Meter Terkini", wajib: false }
-      ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI", "INDUSTRI"]
     },
     {
@@ -173,14 +157,8 @@
       syarat: [
         { id: "s1", teks: "Pelanggan berstatus aktif dan tidak memiliki tunggakan rekening.", wajib: true },
         { id: "s2", teks: "Titik sambungan baru berada dalam jangkauan jaringan dan secara teknis memungkinkan.", wajib: true },
-        { id: "s3", teks: "Pergeseran melewati jalan umum wajib melampirkan izin dari instansi terkait.", wajib: true },
+        { id: "s3", teks: "Pergeseran melewati jalan umum memerlukan nomor izin dari instansi terkait.", wajib: true },
         { id: "s4", teks: "Biaya ditetapkan berdasarkan survei jarak, diameter pipa, dan kondisi lapangan.", wajib: true }
-      ],
-      dokumen: [
-        D_KTP,
-        { id: "pbb", nama: "Fotokopi Bukti PBB / Identitas Bangunan", wajib: true },
-        { id: "denah_baru", nama: "Denah Lokasi Titik Baru", wajib: true },
-        { id: "izin_jalan", nama: "Izin Melewati Jalan Umum (bila melewati jalan)", wajib: false }
       ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI", "INDUSTRI"]
     },
@@ -203,10 +181,6 @@
         { id: "s3", teks: "Masa penutupan sementara mengikuti ketentuan yang berlaku dan dapat diperpanjang satu kali.", wajib: true },
         { id: "s4", teks: "Selama masa tutup, pelanggan tetap dikenakan biaya administrasi layanan minimum sesuai ketentuan.", wajib: true }
       ],
-      dokumen: [
-        D_KTP, D_NOPEL,
-        { id: "bukti_lunas", nama: "Bukti Pelunasan Tunggakan (bila ada)", wajib: false }
-      ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI", "INDUSTRI"]
     },
     {
@@ -214,7 +188,7 @@
       nama: "Perubahan Golongan / Mutasi Data",
       icon: "⇄",
       deskripsi: "Permohonan perubahan golongan tarif (kelas pelanggan), perubahan nama, alamat, atau data kontak pelanggan aktif. Penyesuaian tarif berlaku sejak pembacaan meter berikutnya.",
-      ringkasanIntro: "Permohonan perubahan golongan tarif atau mutasi data pelanggan yang diproses melalui verifikasi dokumen pendukung.",
+      ringkasanIntro: "Permohonan perubahan golongan tarif atau mutasi data pelanggan yang diproses melalui verifikasi data pendukung.",
       estimasi: "Biaya administrasi perubahan golongan/data: ±Rp 25.000 – 50.000. Penyesuaian tarif berlaku sejak pembacaan meter berikutnya.",
       formSchema: [
         { key: "jenis_perubahan", label: "Jenis Perubahan", type: "select", required: true, options: ["Golongan / Tarif", "Nama Pelanggan", "Alamat", "Data Kontak / Pemilik"] },
@@ -226,12 +200,7 @@
         { id: "s1", teks: "Pelanggan berstatus aktif; perubahan berlaku sejak pembacaan meter berikutnya.", wajib: true },
         { id: "s2", teks: "Perubahan golongan disesuaikan dengan kondisi aktual bangunan/jenis pemakaian.", wajib: true },
         { id: "s3", teks: "Bila ditemukan ketidaksesuaian golongan, dikenakan penyesuaian sesuai ketentuan tarif.", wajib: true },
-        { id: "s4", teks: "Perubahan nama/alamat wajib melampirkan dokumen pendukung sah (KTP, KK, sertifikat).", wajib: true }
-      ],
-      dokumen: [
-        D_KTP, D_KK,
-        { id: "dok_golongan", nama: "Dokumen Pendukung Golongan Tujuan (mis. sertifikat / izin usaha)", wajib: true },
-        { id: "sk_perubahan", nama: "Surat Keterangan Perubahan / Kuasa (bila diwakilkan)", wajib: false }
+        { id: "s4", teks: "Perubahan nama/alamat memerlukan data identitas dan informasi pendukung yang benar.", wajib: true }
       ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI", "INDUSTRI"]
     },
@@ -254,12 +223,46 @@
         { id: "s3", teks: "Sertifikat/surat keterangan disahkan oleh pejabat berwenang sesuai prosedur.", wajib: true },
         { id: "s4", teks: "Biaya administrasi per rangkap mengikuti tarif yang berlaku.", wajib: true }
       ],
-      dokumen: [
-        D_KTP, D_NOPEL
-      ],
       jenisPelanggan: ["RT-1", "RT-2", "RT-3", "NIAGA-1", "NIAGA-2", "SOSIAL", "INSTANSI", "INDUSTRI"]
     }
   ];
+
+  /* Data yang diisi langsung pada formulir, sesuai jenis layanan. */
+  const DATA_LAYANAN = {
+    "jasa-pasang": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}", hint: "Masukkan 16 digit NIK." },
+      { key: "nomor_kk", label: "Nomor Kartu Keluarga", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "status_kepemilikan", label: "Status Kepemilikan Bangunan", type: "select", required: true, options: ["Milik sendiri", "Sewa / kontrak", "Lainnya"] },
+      { key: "nomor_bukti_tanah", label: "Nomor Bukti Kepemilikan / Persetujuan Pemilik", type: "text", required: true },
+      { key: "nomor_pbb", label: "Nomor Objek Pajak PBB", type: "text", required: false },
+      { key: "patokan_lokasi", label: "Patokan Lokasi Bangunan", type: "textarea", required: true }
+    ],
+    "jasa-meter": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "angka_meter", label: "Angka Meter Saat Ini (m³)", type: "number", required: false }
+    ],
+    "jasa-sambung": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "nomor_pbb", label: "Nomor Objek Pajak PBB", type: "text", required: false },
+      { key: "patokan_lokasi", label: "Patokan Titik Baru", type: "textarea", required: true },
+      { key: "nomor_izin_jalan", label: "Nomor Izin Jalan (jika diperlukan)", type: "text", required: false }
+    ],
+    "jasa-tutup": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "tanggal_diminta", label: "Tanggal Pelaksanaan Diinginkan", type: "date", required: false }
+    ],
+    "jasa-golongan": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "nomor_kk", label: "Nomor Kartu Keluarga", type: "text", required: false, pattern: "[0-9]{16}" },
+      { key: "data_saat_ini", label: "Data Saat Ini", type: "text", required: true },
+      { key: "data_baru", label: "Data Baru yang Diajukan", type: "text", required: true }
+    ],
+    "jasa-sertifikat": [
+      { key: "nik", label: "NIK Pemohon", type: "text", required: true, pattern: "[0-9]{16}" },
+      { key: "nama_pada_rekening", label: "Nama pada Rekening Air", type: "text", required: true }
+    ]
+  };
+  JASA_DETAILS.forEach((s) => { s.dataSchema = DATA_LAYANAN[s.id] || []; });
 
   /* ---------------- Katalog keluhan ---------------- */
   const KELUHAN_DETAILS = [
@@ -283,7 +286,7 @@
   };
   const STATUS_META = {
     Baru: { chip: "blue" },
-    "Verifikasi Berkas": { chip: "blue" },
+    "Verifikasi Data": { chip: "blue" },
     "Verifikasi": { chip: "blue" },
     "Survey Lapangan": { chip: "amber" },
     "Penanganan": { chip: "amber" },
@@ -292,7 +295,7 @@
     "Ditolak": { chip: "danger" },
     "Dibatalkan": { chip: "gray" }
   };
-  const STATUS_FLOW = ["Baru", "Verifikasi Berkas", "Survey Lapangan", "Menunggu Pembayaran", "Selesai"];
+  const STATUS_FLOW = ["Baru", "Verifikasi Data", "Survey Lapangan", "Menunggu Pembayaran", "Selesai"];
   const STATUS_FLOW_KELUHAN = ["Baru", "Verifikasi", "Penanganan", "Selesai"];
 
   /* ---------------- Seed data ---------------- */
@@ -346,125 +349,7 @@
           jenisPelanggan: "RT-2",
           formData: { jenis_bangunan: "Rumah Tinggal", jumlah_lantai: "2", luas_tanah: "72", jarak_pipa: "8", sumber_saat_ini: "Sumur / Jetpump", pemakaian_rencana: "10 – 20 m³", titik_sambungan: "Titik di depan pagar, sisi kiri dari gapura utama." },
           syaratCheck: { jenisPelanggan: "RT-2", syarat: ["s1", "s2", "s3", "s4", "s5", "s6"], kontrak: ["k1", "k2", "k3", "k4", "k6", "k7"] },
-          dokumen: [
-            { id: "ktp", nama: "Fotokopi KTP Pemohon", wajib: true, status: "unggah", file: { name: "ktp_dewi.jpg", size: 418000 } },
-            { id: "kk", nama: "Fotokopi Kartu Keluarga (KK)", wajib: true, status: "unggah", file: { name: "kk_dewi.jpg", size: 392000 } },
-            { id: "sertif_tanah", nama: "Fotokopi Bukti Kepemilikan Tanah / Akta Jual Beli", wajib: true, status: "siap" },
-            { id: "pbb", nama: "Bukti PBB Tahun Berjalan / SK Pengurang", wajib: true, status: "siap" },
-            { id: "denah", nama: "Denah Lokasi / Peta Titik Sambungan", wajib: true, status: "siap" },
-            { id: "imb", nama: "IMB / Akta Pendirian (untuk instansi & usaha)", wajib: false, status: "belum" }
-          ],
-          ringkasan: "Permohonan sambungan air bersih baru untuk Rumah Tinggal 2 lantai (luas tanah 72 m²) jenis pelanggan RT-2, jarak ke pipa utama ±8 meter, sumber saat ini Sumur/Jetpump, perkiraan pemakaian 10–20 m³/bulan. Estimasi: Rp 650.000 – 2.500.000.",
-          biaya: { nominal: 1180000, catatan: "Jarak sambungan 8 m, diameter 3/4\", termasuk meter" },
-          status: "Verifikasi Berkas",
-          created: d(2),
-          timeline: [
-            { date: d(2), text: "Permohonan jasa dikirim" },
-            { date: d(1), text: "Berkas diterima, dalam verifikasi oleh petugas" }
-          ],
-          reaction: null
-        },
-        {
-          id: "TPK-2026-0410",
-          type: "jasa",
-          idLayanan: "jasa-sambung",
-          nmLayanan: "Penggeseran / Sambung Ulang",
-          nama: "Budi Santoso",
-          noHP: "0812 3456 7890",
-          alamat: "Jl. Pajajaran No. 45, Bogor Tengah",
-          zona: "Zona 3 – Baranangsiang",
-          noPelanggan: "3124508221",
-          keluhan: "",
-          jasa: "Perlu penggeseran titik meter karena renovasi pagar depan. Sudah mendapat izin dari pihak kecamatan.",
-          catatan: "Estimasi biaya pergeseran: Rp 250.000",
-          prioritas: "Normal",
-          jenisPelanggan: "RT-2",
-          formData: { jenis_permohonan: "Penggeseran Titik Meter", alasan: "Renovasi pagar depan", jarak_pergeseran: "6", titik_baru: "Pagar depan sisi kanan", lewat_jalan: "Tidak" },
-          syaratCheck: { jenisPelanggan: "RT-2", syarat: ["s1", "s2", "s3", "s4"], kontrak: ["k1", "k2", "k3", "k4", "k6", "k7"] },
-          dokumen: [
-            { id: "ktp", nama: "Fotokopi KTP Pemohon", wajib: true, status: "unggah", file: { name: "ktp_budi.jpg", size: 385000 } },
-            { id: "pbb", nama: "Fotokopi Bukti PBB / Identitas Bangunan", wajib: true, status: "siap" },
-            { id: "denah_baru", nama: "Denah Lokasi Titik Baru", wajib: true, status: "siap" },
-            { id: "izin_jalan", nama: "Izin Melewati Jalan Umum (bila melewati jalan)", wajib: false, status: "belum" }
-          ],
-          ringkasan: "Permohonan Penggeseran Titik Meter untuk pelanggan RT-2 (No. 3124508221) dengan jarak pergeseran ±6 meter karena renovasi pagar depan.",
-          biaya: { nominal: 250000, catatan: "Jarak 6 m, tidak melewati jalan umum" },
-          status: "Menunggu Pembayaran",
-          created: d(4),
-          timeline: [
-            { date: d(4), text: "Permohonan jasa dikirim" },
-            { date: d(3), text: "Survey lokasi oleh teknisi" },
-            { date: d(1), text: "Berkas disetujui, biaya ditetapkan Rp 250.000 — menunggu pembayaran" }
-          ],
-          reaction: null
-        },
-        {
-          id: "TPK-2026-0405",
-          type: "keluhan",
-          idLayanan: "keluhan-meter",
-          nmLayanan: "Meter Bermasalah",
-          nama: "Siti Rahayu",
-          noHP: "0857 1122 3344",
-          alamat: "Jl. Siliwangi No. 12, Bogor Selatan",
-          zona: "Zona 1 – Tanah Sareal",
-          noPelanggan: "3113098776",
-          keluhan: "Meter tetap berputar meski semua kran sudah ditutup berjam-jam.",
-          jasa: "",
-          catatan: "",
-          prioritas: "Tinggi",
-          jenisPelanggan: "RT-1",
-          formData: {},
-          syaratCheck: { jenisPelanggan: "RT-1", syarat: [], kontrak: [] },
-          dokumen: [],
-          ringkasan: "Keluhan: Meter Bermasalah — meter berputar tanpa pemakaian. Diprioritaskan untuk pemeriksaan.",
-          biaya: { nominal: null, catatan: "—" },
-          status: "Penanganan",
-          created: d(0),
-          timeline: [
-            { date: d(0), text: "Tiket dibuat oleh pelanggan" },
-            { date: d(0).replace("-", ""), text: "Diverifikasi, petugas ditugaskan" }
-          ],
-          reaction: null
-        },
-        {
-          id: "TPK-2026-0398",
-          type: "jasa",
-          idLayanan: "jasa-pasang",
-          nmLayanan: "Pemasangan Baru",
-          nama: "Dewi Lestari",
-          noHP: "0813 9988 7766",
-          alamat: "Perum Griya Bukit Jaya Blok C2 No.8, Bogor Timur",
-          zona: "Zona 2 – Bogor Timur",
-          noPelanggan: "—",
-          keluhan: "",
-          jasa: "Pemasangan sambungan air baru untuk rumah tinggal. Siap membayar biaya sambungan awal.",
-          catatan: "Berkas KTP, KK, dan PBB sudah dilampirkan.",
-          prioritas: "Normal",
-          jenisPelanggan: "RT-2",
-          formData: { jenis_bangunan: "Rumah Tinggal", jumlah_lantai: "1", luas_tanah: "60", jarak_pipa: "10", sumber_saat_ini: "Sumur / Jetpump", pemakaian_rencana: "< 10 m³", titik_sambungan: "Depan rumah, dekat GPS kavling." },
-          syaratCheck: { jenisPelanggan: "RT-2", syarat: ["s1", "s2", "s3", "s4", "s5", "s6"], kontrak: ["k1", "k2", "k3", "k4", "k6", "k7"] },
-          dokumen: [
-            { id: "ktp", nama: "Fotokopi KTP Pemohon", wajib: true, status: "unggah", file: { name: "ktp_dewi.jpg", size: 410000 } },
-            { id: "kk", nama: "Fotokopi Kartu Keluarga (KK)", wajib: true, status: "unggah", file: { name: "kk_dewi.jpg", size: 387000 } },
-            { id: "sertif_tanah", nama: "Fotokopi Bukti Kepemilikan Tanah / Akta Jual Beli", wajib: true, status: "siap" },
-            { id: "pbb", nama: "Bukti PBB Tahun Berjalan / SK Pengurang", wajib: true, status: "siap" },
-            { id: "denah", nama: "Denah Lokasi / Peta Titik Sambungan", wajib: true, status: "siap" },
-            { id: "imb", nama: "IMB / Akta Pendirian (untuk instansi & usaha)", wajib: false, status: "belum" }
-          ],
-          ringkasan: "Permohonan sambungan air bersih baru untuk Rumah Tinggal 1 lantai (luas tanah 60 m²) jenis pelanggan RT-2, jarak ke pipa utama ±10 meter.",
-          biaya: { nominal: 950000, catatan: "Termasuk meter & aksesoris" },
-          status: "Selesai",
-          created: d(10),
-          timeline: [
-            { date: d(10), text: "Permohonan jasa dikirim" },
-            { date: d(8), text: "Survey lokasi oleh teknisi" },
-            { date: d(6), text: "Persetujuan & pembayaran selesai" },
-            { date: d(3), text: "Sambungan terpasang — selesai" }
-          ],
-          reaction: 5
-        }
-      ],
-      notifications: [
+          notifications: [
         { id: 1, ico: "⚠", text: "Gangguan perbaikan pipa di Kp. Dekeng, aliran menurun untuk sementara.", time: "2 jam lalu", unread: true },
         { id: 2, ico: "☑", text: "Pembayaran periode Juni 2026 tercatat dan terverifikasi.", time: "5 hari lalu", unread: false },
         { id: 3, ico: "☏", text: "Petugas teknologi akan menghubungi Anda terkait tiket TPK-2026-0412.", time: "Kemarin", unread: true },
@@ -500,6 +385,7 @@
       if (typeof t.reaction !== "number" && t.reaction !== null) { t.reaction = null; changed = true; }
       if (!Array.isArray(t.timeline)) { t.timeline = []; changed = true; }
       if (!t.formData || typeof t.formData !== "object") { t.formData = {}; changed = true; }
+      if (t.status === "Verifikasi Berkas") { t.status = "Verifikasi Data"; changed = true; }
       if (!t.syaratCheck || typeof t.syaratCheck !== "object") { t.syaratCheck = { jenisPelanggan: null, syarat: [], kontrak: [] }; changed = true; }
       if (!Array.isArray(t.dokumen)) { t.dokumen = []; changed = true; }
       if (typeof t.ringkasan !== "string") { t.ringkasan = ""; changed = true; }
@@ -563,7 +449,7 @@
 
   /* ---------------- Ringkasan kebutuhan builder ---------------- */
   function fieldLabel(jasa, key) {
-    const f = (jasa.formSchema || []).find((x) => x.key === key);
+    const f = [...(jasa.formSchema || []), ...(jasa.dataSchema || [])].find((x) => x.key === key);
     return f ? f.label : key;
   }
 
@@ -578,9 +464,6 @@
     if (jenisId) {
       const jp = jpById(jenisId);
       lines.push("<div><b>Jenis Pelanggan:</b> " + (jp ? jp.nama + " (" + jp.id + ")" : jenisId) + "</div>");
-    }
-    if (docTotal > 0) {
-      lines.push("<div><b>Kelengkapan dokumen:</b> " + docDone + " dari " + docTotal + " berkas wajib telah disiapkan</div>");
     }
     lines.push("<div class='muted'><b>Estimasi biaya indikatif:</b> " + jasa.estimasi + "</div>");
     return lines.join("<br>");
@@ -634,12 +517,16 @@
     return { label: "Belum", chip: "gray", ico: "○" };
   }
 
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
   function formDataHtml(t) {
     const jasa = svc(t.idLayanan);
     if (!jasa || !jasa.formSchema || !t.formData) return "";
-    const rows = jasa.formSchema
+    const rows = [...jasa.formSchema, ...(jasa.dataSchema || [])]
       .filter((f) => t.formData[f.key])
-      .map((f) => `<tr><td>${f.label}</td><td class="right">${t.formData[f.key]}</td></tr>`)
+      .map((f) => `<tr><td>${escapeHtml(f.label)}</td><td class="right">${escapeHtml(t.formData[f.key])}</td></tr>`)
       .join("");
     return rows ? `<table class="table"><tbody>${rows}</tbody></table>` : "";
   }
@@ -655,17 +542,8 @@
     const pm = PRIORITY_META[t.prioritas] || { chip: "gray" };
     const jp = jpById(t.jenisPelanggan);
     const biaya = t.biaya || {};
-    const canSetBiaya = isStaff && isJasa && !endStatus && (["Verifikasi Berkas", "Survey Lapangan", "Menunggu Pembayaran"].indexOf(t.status) >= 0);
-    const canReject = isStaff && !endStatus && (t.status === "Verifikasi Berkas" || t.status === "Verifikasi");
-
-    const docRows = (t.dokumen || []).map((doc) => {
-      const m = docStatusMeta(doc);
-      const file = doc.file ? `<span class="doc-file">▤ ${doc.file.name} (${(doc.file.size / 1024).toFixed(0)} KB)</span>` : "";
-      return `<div class="doc-row">
-        <span class="chip ${m.chip}">${m.label}</span>
-        <div><b>${doc.nama}</b> ${doc.wajib ? "<em class='req-mark'>wajib</em>" : "<em class='opt-mark'>opsional</em>"}${file ? "<br>" + file : ""}</div>
-      </div>`;
-    }).join("");
+    const canSetBiaya = isStaff && isJasa && !endStatus && (["Verifikasi Data", "Survey Lapangan", "Menunggu Pembayaran"].indexOf(t.status) >= 0);
+    const canReject = isStaff && !endStatus && (t.status === "Verifikasi Data" || t.status === "Verifikasi");
 
     const biayaBlock = `<div class="card tcard">
       <div class="card-header"><h3>Biaya Layanan</h3></div>
@@ -719,10 +597,6 @@
             <div class="small">${kelengkapan}</div>
           </div>` : ""}
 
-          <div class="card tcard">
-            <div class="card-header"><h3>Dokumen Persyaratan</h3></div>
-            ${(t.dokumen || []).length ? `<div class="doc-list">${docRows}</div>` : "<span class='muted small'>Tidak ada dokumen yang dilampirkan.</span>"}
-          </div>
 
           <div class="card tcard">
             <div class="card-header"><h3>Detail ${isJasa ? "Permintaan Jasa" : "Keluhan"}</h3></div>
@@ -741,7 +615,7 @@
 
           <div class="ticket-actions">
             <button class="btn small wa-ticket-btn" onclick="TP.waTicket('${t.id}')">Cek progress tiket via WhatsApp ↗</button>
-            ${canReject ? `<button class="btn small danger ghost" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Kurang Berkas</button>` : ""}
+            ${canReject ? `<button class="btn small danger ghost" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Perlu Perbaikan Data</button>` : ""}
             ${!endStatus && nxt ? `<button class="btn small" onclick="TP.advanceTicket('${t.id}')">→ Proses ke: ${nxt}</button>` : ""}
             ${!endStatus && !isStaff ? `<button class="btn small danger" onclick="TP.cancelTicket('${t.id}')">✕ Batalkan Tiket</button>` : ""}
             <button class="btn small ghost" onclick="TP.printTicket('${t.id}')">⎙ Cetak / Unduh</button>
@@ -813,14 +687,14 @@
   function rejectTicket(id) {
     const t = DB.get().tickets.find((x) => x.id === id);
     if (!t) return;
-    if (t.status !== "Verifikasi Berkas" && t.status !== "Verifikasi") { toast("Tiket hanya dapat ditolak pada tahap verifikasi.", "error"); return; }
-    const reason = prompt("Alasan penolakan / berkas kurang:", "Berkas tidak lengkap atau data tidak sesuai.");
+    if (t.status !== "Verifikasi Data" && t.status !== "Verifikasi") { toast("Tiket hanya dapat ditolak pada tahap verifikasi.", "error"); return; }
+    const reason = prompt("Alasan penolakan / data kurang:", "Data tidak lengkap atau tidak sesuai.");
     if (reason === null) return;
     const db = DB.get();
     const tt = db.tickets.find((x) => x.id === id);
     tt.status = "Ditolak";
     tt.timeline.push({ date: todays(), text: "Tiket ditolak oleh petugas. Alasan: " + (reason.trim() || "—") });
-    pushNotif("Tiket " + id + " ditolak. Silakan perbaiki kelengkapan berkas.", "⚠");
+    pushNotif("Tiket " + id + " ditolak. Silakan perbaiki data permohonan.", "⚠");
     DB.set(db);
     toast("Tiket " + id + " ditolak.", "success");
     openTicketModal(id);
@@ -857,10 +731,6 @@
     if (!w) { toast("Popup diblokir. Izinkan popup untuk mencetak.", "error"); return; }
     const isJasa = t.type === "jasa";
     const jp = jpById(t.jenisPelanggan);
-    const docRows = (t.dokumen || []).map((doc) => {
-      const status = doc.status === "unggah" ? "Diupload ✓" : doc.status === "siap" ? "Siap ☐" : "Belum ○";
-      return `<tr><td>${doc.nama}</td><td>${doc.wajib ? "Wajib" : "Opsional"}</td><td>${status}</td></tr>`;
-    }).join("");
     w.document.write(`<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>${t.id}</title>
       <style>body{font-family:Arial,sans-serif;color:#152238;padding:28px;line-height:1.6}
       h1{font-size:20px;margin:0 0 4px}.muted{color:#8494a8;font-size:12px}
@@ -878,8 +748,8 @@
         ${jp ? `<tr><td>Jenis Pelanggan</td><td colspan="3">${jp.nama} (${jp.id})</td></tr>` : ""}</table>
         <h2>Ringkasan Kebutuhan</h2>
         <div>${t.ringkasan || "—"}</div>
-        <h2>Dokumen Persyaratan</h2>
-        <table><thead><tr><th>Dokumen</th><th>Kategori</th><th>Status</th></tr></thead><tbody>${docRows || "<tr><td colspan='3'>Tidak ada</td></tr>"}</tbody></table>
+        <h2>Data Formulir</h2>
+        ${formDataHtml(t) || "<div>—</div>"}
         <h2>Biaya Layanan</h2>
         <div>${fmtRupiah(t.biaya && t.biaya.nominal)}${t.biaya && t.biaya.catatan !== "—" ? " — " + t.biaya.catatan : ""}</div>
         <h2>Timeline</h2>
@@ -896,7 +766,7 @@
     closeServiceModal();
     const isJasa = s.formSchema ? true : false;
     const jps = s.jenisPelanggan || [];
-    const docList = isJasa ? s.dokumen : [{ id: "foto", nama: "Foto / Bukti Kejadian", wajib: false }];
+    const dataList = isJasa ? [...(s.dataSchema || []), ...(s.formSchema || [])] : [{ label: "Nama dan nomor WhatsApp" }, { label: "Alamat dan detail keluhan" }];
     const syaratList = isJasa ? s.syarat : [];
 
     const jenisContent = isJasa ? jps.map((jid) => {
@@ -916,8 +786,8 @@
       `<div class="rincian-item"><span class="chip blue">Kontrak</span><span>${k.teks}</span></div>`
     ).join("");
 
-    const dokContent = docList.map((d) =>
-      `<div class="rincian-item"><span class="chip ${d.wajib ? "amber" : "gray"}">${d.wajib ? "Wajib" : "Opsional"}</span><span>${d.nama}</span></div>`
+    const dataContent = dataList.map((d) =>
+      `<div class="rincian-item"><span class="chip ${d.required === false ? "gray" : "amber"}">${d.required === false ? "Opsional" : "Diisi"}</span><span>${d.label}</span></div>`
     ).join("");
 
     const estimasiContent = isJasa ? s.estimasi : "<div class='small muted'>Keluhan ditangani langsung oleh petugas tanpa biaya di muka. Bila penanganan melibatkan penggantian komponen, biaya menyesuaikan ketentuan.</div>";
@@ -936,14 +806,14 @@
         <button class="tabs-btn active" data-tab="syarat" onclick="TP.tab('sv',0)">Syarat & Ketentuan</button>
         <button class="tabs-btn" data-tab="kontrak" onclick="TP.tab('sv',1)">Kontrak Pelanggan</button>
         <button class="tabs-btn" data-tab="jenis" onclick="TP.tab('sv',2)">Jenis Pelanggan</button>
-        <button class="tabs-btn" data-tab="dokumen" onclick="TP.tab('sv',3)">Dokumen Persyaratan</button>
+        <button class="tabs-btn" data-tab="data" onclick="TP.tab('sv',3)">Data Formulir</button>
         <button class="tabs-btn" data-tab="estimasi" onclick="TP.tab('sv',4)">Estimasi Biaya</button>
       </div>
       <div class="tabs-panes">
         <div class="tabs-pane active" data-pane="0">${syaratContent}</div>
         <div class="tabs-pane" data-pane="1">${kontrakContent}</div>
         <div class="tabs-pane" data-pane="2">${jenisContent}</div>
-        <div class="tabs-pane" data-pane="3">${dokContent}</div>
+        <div class="tabs-pane" data-pane="3">${dataContent}</div>
         <div class="tabs-pane" data-pane="4"><div class="est-badge">${estimasiContent}</div></div>
       </div>
     </div>`;
