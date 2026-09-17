@@ -298,63 +298,21 @@
   const STATUS_FLOW = ["Baru", "Verifikasi Data", "Survey Lapangan", "Menunggu Pembayaran", "Selesai"];
   const STATUS_FLOW_KELUHAN = ["Baru", "Verifikasi", "Penanganan", "Selesai"];
 
-  /* ---------------- Seed data ---------------- */
+  /* ---------------- Data contoh untuk halaman pengembangan ---------------- */
   function buildSeed() {
-    const now = Date.now();
-    const d = (offsetDays) => {
-      const t = new Date(now - offsetDays * 86400000);
-      return `${t.getDate().toString().padStart(2, "0")}/${(t.getMonth() + 1).toString().padStart(2, "0")}/${t.getFullYear()}`;
-    };
     return {
-      tickets: [
-        {
-          id: "TPK-2026-0412",
-          type: "keluhan",
-          idLayanan: "keluhan-lemak",
-          nmLayanan: "Air Kurang Lancar",
-          nama: "Budi Santoso",
-          noHP: "0812 3456 7890",
-          alamat: "Jl. Pajajaran No. 45, Bogor Tengah",
-          zona: "Zona 3 – Baranangsiang",
-          noPelanggan: "3124508221",
-          keluhan: "Sejak 2 hari terakhir debit air di lantai dua rumah sangat lemah, terutama pagi dan sore hari.",
-          jasa: "",
-          catatan: "",
-          prioritas: "Normal",
-          jenisPelanggan: "RT-2",
-          formData: {},
-          syaratCheck: { jenisPelanggan: "RT-2", syarat: [], kontrak: [] },
-          dokumen: [],
-          ringkasan: "Keluhan: Air Kurang Lancar — aliran air di lantai dua sangat lemah. Diprioritaskan penanganan petugas lapangan.",
-          biaya: { nominal: null, catatan: "—" },
-          status: "Baru",
-          created: d(0),
-          timeline: [{ date: d(0), text: "Tiket dibuat oleh pelanggan" }],
-          reaction: null
-        },
-        {
-          id: "TPK-2026-0411",
-          type: "jasa",
-          idLayanan: "jasa-pasang",
-          nmLayanan: "Pemasangan Baru",
-          nama: "Dewi Lestari",
-          noHP: "0813 9988 7766",
-          alamat: "Perum Griya Bukit Jaya Blok C2 No.8, Bogor Timur",
-          zona: "Zona 2 – Bogor Timur",
-          noPelanggan: "—",
-          keluhan: "",
-          jasa: "",
-          catatan: "",
-          prioritas: "Normal",
-          jenisPelanggan: "RT-2",
-          formData: { jenis_bangunan: "Rumah Tinggal", jumlah_lantai: "2", luas_tanah: "72", jarak_pipa: "8", sumber_saat_ini: "Sumur / Jetpump", pemakaian_rencana: "10 – 20 m³", titik_sambungan: "Titik di depan pagar, sisi kiri dari gapura utama." },
-          syaratCheck: { jenisPelanggan: "RT-2", syarat: ["s1", "s2", "s3", "s4", "s5", "s6"], kontrak: ["k1", "k2", "k3", "k4", "k6", "k7"] },
-          notifications: [
-        { id: 1, ico: "⚠", text: "Gangguan perbaikan pipa di Kp. Dekeng, aliran menurun untuk sementara.", time: "2 jam lalu", unread: true },
-        { id: 2, ico: "☑", text: "Pembayaran periode Juni 2026 tercatat dan terverifikasi.", time: "5 hari lalu", unread: false },
-        { id: 3, ico: "☏", text: "Petugas teknologi akan menghubungi Anda terkait tiket TPK-2026-0412.", time: "Kemarin", unread: true },
-        { id: 4, ico: "☆", text: "Bapak Budi, silakan isi survei kepuasan untuk layanan terakhir Anda.", time: "Minggu lalu", unread: false }
-      ]
+      tickets: [{
+        id: "TPK-2026-0412", type: "keluhan", idLayanan: "keluhan-lemak",
+        nmLayanan: "Air Kurang Lancar", nama: "Budi Santoso", noHP: "0812 3456 7890",
+        alamat: "Jl. Pajajaran No. 45, Bogor Tengah", zona: "Zona 3 – Baranangsiang",
+        noPelanggan: "3124508221", keluhan: "Debit air di lantai dua rumah lemah.",
+        jasa: "", catatan: "", prioritas: "Normal", jenisPelanggan: "RT-2",
+        formData: {}, syaratCheck: { jenisPelanggan: "RT-2", syarat: [], kontrak: [] },
+        dokumen: [], ringkasan: "Aliran air di lantai dua rumah lemah.",
+        biaya: { nominal: null, catatan: "—" }, status: "Baru", created: todays(),
+        timeline: [{ date: todays(), text: "Tiket dibuat oleh pelanggan" }], reaction: null
+      }],
+      notifications: []
     };
   }
 

@@ -164,7 +164,7 @@
               <div class="sum-body" id="ringkasan-box"></div>
             </div>
             <div class="card tcard">
-              <div class="card-header"><div><h3>▦ Data Tambahan</h3><div class="sub">Isi data yang diperlukan sesuai layanan. Data ini akan tersimpan pada tiket.</div></div></div>
+              <div class="card-header"><div><h3>▦ Data Tambahan</h3><div class="sub">Isi data yang diperlukan sesuai layanan. Pada versi pengembangan ini, data tiket tersimpan di browser yang digunakan.</div></div></div>
               <div class="form-grid-2" id="data-layanan-box"></div>
             </div>
             <div style="display:flex;gap:10px;justify-content:space-between">
@@ -435,7 +435,7 @@
     }
     function formOkForCurrent() {
       let ok = true;
-      const fields = Array.from(el("ticket-form").querySelectorAll("[required]"));
+      const fields = Array.from(el("ticket-form").querySelectorAll("[data-key], [required]"));
       fields.forEach((inp) => {
         const pane = inp.closest(".step-pane");
         if (pane && pane.classList.contains("hidden")) return;
@@ -450,7 +450,7 @@
     }
     function formOkAll() {
       let ok = true;
-      Array.from(el("ticket-form").querySelectorAll("[required]")).forEach((inp) => {
+      Array.from(el("ticket-form").querySelectorAll("[data-key], [required]")).forEach((inp) => {
         if (inp.checkValidity && !inp.checkValidity()) ok = false;
       });
       return ok;
@@ -466,7 +466,7 @@
         if (type === "jasa") {
           if (!selJenis) { TP.toast("Silakan pilih jenis pelanggan terlebih dahulu.", "error"); return false; }
           const s = currentSvc();
-          if (syaratChecked.length < (s.syarat || []).length) { TP.toast("Centang seluruh poin Syarat &amp; Ketentuan.", "error"); return false; }
+          if ((s.syarat || []).some((item) => item.wajib && !syaratChecked.includes(item.id))) { TP.toast("Setujui seluruh syarat wajib.", "error"); return false; }
           if (kontrakChecked.length < TP.KONTRAK_PELANGGAN.length) { TP.toast("Centang seluruh poin Kontrak Pelanggan.", "error"); return false; }
         }
         return true;

@@ -721,7 +721,7 @@ table.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .service-tile-link { display: block; color: inherit; }
 .service-tile-art { height: 158px; display: grid; place-items: center; background: #26539b; transition: background .2s; }
 .service-tile-link:hover .service-tile-art { background: #1c478a; }
-.service-tile-icon { width: 94px; height: 94px; display: grid; place-items: center; background: #fff; border: 5px solid #dbe7f8; border-radius: 50%; box-shadow: 0 3px 12px #092b6652; color: #26539b; }
+.service-tile-icon { width: 94px; height: 94px; display: grid; place-items: center; background: #fff; border: 5px solid #dbe7f8; border-radius: 50%; box-shadow: 0 3px 12px #092b6652; color: #26539b; font-size: 2.8rem; line-height: 1; }
 .service-tile-icon svg { width: 53px; height: 53px; }
 .service-tile-body { min-height: 118px; padding: 16px 15px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; }
 .service-tile-body strong { color: #26539b; font-size: 1rem; line-height: 1.3; }
