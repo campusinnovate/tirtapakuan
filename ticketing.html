@@ -367,13 +367,8 @@
         </button>`;
       }).join("");
 
-      const syaratItems = syaratList.map((sy) =>
-        `<li><input type="checkbox" value="${sy.id}" ${syaratChecked.indexOf(sy.id) >= 0 ? "checked" : ""}> <span>${sy.teks}${sy.wajib ? " <span class='opt-mark'>wajib</span>" : ""}</span></li>`
-      ).join("");
-
-      const kontrakItems = TP.KONTRAK_PELANGGAN.map((k) =>
-        `<li><input type="checkbox" value="${k.id}" ${kontrakChecked.indexOf(k.id) >= 0 ? "checked" : ""}> <span>${k.teks}</span></li>`
-      ).join("");
+      const syaratItems = `<li class="agreement-check"><input type="checkbox" value="semua-syarat" ${syaratChecked.includes("semua-syarat") ? "checked" : ""}> <span><b>Saya telah membaca dan menyetujui seluruh syarat &amp; ketentuan layanan ini.</b><small>Rincian persyaratan tetap dapat dilihat melalui tautan di atas.</small></span></li>`;
+      const kontrakItems = `<li class="agreement-check"><input type="checkbox" value="semua-kontrak" ${kontrakChecked.includes("semua-kontrak") ? "checked" : ""}> <span><b>Saya menyetujui hak dan kewajiban pelanggan yang berlaku.</b><small>Centang ini mewakili seluruh poin kontrak pelanggan.</small></span></li>`;
 
       area.innerHTML =
         '<div class="ck-head"><h4>Jenis Pelanggan</h4><a href="#" onclick="event.preventDefault();TP.openServiceModal(\'' + s.id + '\')">Lihat rincian →</a></div>' +
@@ -391,9 +386,7 @@
       });
       area.querySelectorAll(".check-list input").forEach((cb) => {
         cb.addEventListener("change", () => {
-          const ul = cb.closest("ul");
-          const prevHead = ul.previousElementSibling;
-          const isKontrak = prevHead && prevHead.classList.contains("ck-head") && prevHead.textContent.indexOf("Kontrak") >= 0;
+          const isKontrak = cb.value === "semua-kontrak";
           const list = isKontrak ? kontrakChecked : syaratChecked;
           if (cb.checked) { if (list.indexOf(cb.value) < 0) list.push(cb.value); }
           else { const i = list.indexOf(cb.value); if (i >= 0) list.splice(i, 1); }
@@ -513,9 +506,8 @@
       if (n === 3) {
         if (type === "jasa") {
           if (!selJenis) { TP.toast("Silakan pilih jenis pelanggan terlebih dahulu.", "error"); return false; }
-          const s = currentSvc();
-          if ((s.syarat || []).some((item) => item.wajib && !syaratChecked.includes(item.id))) { TP.toast("Setujui seluruh syarat wajib.", "error"); return false; }
-          if (kontrakChecked.length < TP.KONTRAK_PELANGGAN.length) { TP.toast("Centang seluruh poin Kontrak Pelanggan.", "error"); return false; }
+          if (!syaratChecked.includes("semua-syarat")) { TP.toast("Setujui syarat dan ketentuan untuk melanjutkan.", "error"); return false; }
+          if (!kontrakChecked.includes("semua-kontrak")) { TP.toast("Setujui hak dan kewajiban pelanggan untuk melanjutkan.", "error"); return false; }
         }
         return true;
       }

@@ -520,7 +520,7 @@
     </div>`;
 
     const sct = { jenis: t.syaratCheck?.jenisPelanggan || t.jenisPelanggan || "—", syarat: (t.syaratCheck?.syarat || []).length, kontrak: (t.syaratCheck?.kontrak || []).length };
-    const kelengkapan = `Jenis: <b>${jp ? jp.nama : (sct.jenis || "—")}</b> · Syarat disetujui: <b>${sct.syarat}</b> · Kontrak disetujui: <b>${sct.kontrak}</b>`;
+    const kelengkapan = `Jenis: <b>${jp ? jp.nama : (sct.jenis || "—")}</b> · Syarat & ketentuan: <b>${sct.syarat ? "Disetujui" : "Belum disetujui"}</b> · Hak & kewajiban: <b>${sct.kontrak ? "Disetujui" : "Belum disetujui"}</b>`;
 
     return `<div class="modal-backdrop open" id="ticketModalShell" onclick="if(event.target===this)TP.closeTicketModal()">
       <div class="modal modal-xl${isVerification ? " verification-modal" : ""}" role="dialog" aria-modal="true">
@@ -581,8 +581,8 @@
           </div>
 
           <div class="ticket-actions">
-            ${canReject ? `<button class="btn small danger ghost" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Perlu Perbaikan Data</button>` : ""}
-            ${!endStatus && nxt ? `<button class="btn small" onclick="TP.advanceTicket('${t.id}')">→ Proses ke: ${nxt}</button>` : ""}
+            ${canReject ? `<button class="btn ${isVerification ? "verification-action verification-action--secondary" : "small danger ghost"}" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Perlu Perbaikan Data</button>` : ""}
+            ${isStaff && !endStatus && nxt ? `<button class="btn ${isVerification ? "verification-action" : "small"}" onclick="TP.advanceTicket('${t.id}')">${isVerification ? "✓ Verifikasi & lanjutkan ke: " : "→ Proses ke: "}${nxt}</button>` : ""}
             ${!endStatus && !isStaff ? `<button class="btn small danger" onclick="TP.cancelTicket('${t.id}')">✕ Batalkan Tiket</button>` : ""}
             <button class="btn small ghost" onclick="TP.printTicket('${t.id}')">⎙ Cetak / Unduh</button>
           </div>
