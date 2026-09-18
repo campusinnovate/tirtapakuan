@@ -346,6 +346,7 @@
       if (t.status === "Verifikasi Berkas") { t.status = "Verifikasi Data"; changed = true; }
       if (!t.syaratCheck || typeof t.syaratCheck !== "object") { t.syaratCheck = { jenisPelanggan: null, syarat: [], kontrak: [] }; changed = true; }
       if (!Array.isArray(t.dokumen)) { t.dokumen = []; changed = true; }
+      if (!Array.isArray(t.images)) { t.images = []; changed = true; }
       if (typeof t.ringkasan !== "string") { t.ringkasan = ""; changed = true; }
       if (!t.biaya || typeof t.biaya !== "object") { t.biaya = { nominal: null, catatan: "—" }; changed = true; }
       if (!t.jenisPelanggan) { t.jenisPelanggan = t.syaratCheck.jenisPelanggan || "—"; changed = true; }
@@ -502,6 +503,11 @@
     const biaya = t.biaya || {};
     const canSetBiaya = isStaff && isJasa && !endStatus && (["Verifikasi Data", "Survey Lapangan", "Menunggu Pembayaran"].indexOf(t.status) >= 0);
     const canReject = isStaff && !endStatus && (t.status === "Verifikasi Data" || t.status === "Verifikasi");
+    const isVerification = t.status === "Verifikasi Data" || t.status === "Verifikasi";
+    const imageBlock = !isJasa && Array.isArray(t.images) && t.images.length ? `<div class="card tcard">
+      <div class="card-header"><h3>Foto Problem</h3><span class="chip blue">${t.images.length} lampiran</span></div>
+      <div class="ticket-image-grid">${t.images.map((image, i) => `<a href="${image.dataUrl}" target="_blank" rel="noopener" class="ticket-image"><img src="${image.dataUrl}" alt="Foto problem ${i + 1}"><span>${escapeHtml(image.name || "Foto problem")}</span></a>`).join("")}</div>
+    </div>` : "";
 
     const biayaBlock = `<div class="card tcard">
       <div class="card-header"><h3>Biaya Layanan</h3></div>
@@ -517,12 +523,13 @@
     const kelengkapan = `Jenis: <b>${jp ? jp.nama : (sct.jenis || "—")}</b> · Syarat disetujui: <b>${sct.syarat}</b> · Kontrak disetujui: <b>${sct.kontrak}</b>`;
 
     return `<div class="modal-backdrop open" id="ticketModalShell" onclick="if(event.target===this)TP.closeTicketModal()">
-      <div class="modal modal-xl" role="dialog" aria-modal="true">
+      <div class="modal modal-xl${isVerification ? " verification-modal" : ""}" role="dialog" aria-modal="true">
         <div class="modal-head">
           <h3>${t.id} — ${t.nmLayanan}</h3>
           <button class="modal-close" onclick="TP.closeTicketModal()" aria-label="Tutup">×</button>
         </div>
         <div id="ttm-body">
+          ${isVerification ? `<div class="verification-float"><span>🔎</span><div><b>Tiket menunggu verifikasi</b><small>${isStaff ? "Periksa data dan lampiran, lalu lanjutkan atau minta perbaikan." : "Petugas sedang memeriksa data tiket Anda. Notifikasi akan muncul setelah ada pembaruan."}</small></div></div>` : ""}
           <div class="pills">
             <span class="pill ${isJasa ? "teal" : "blue"}">${SOURCE_TYPES[t.type]}</span>
             <span class="pill ${pm.chip}">Prioritas: ${t.prioritas}</span>
@@ -544,6 +551,8 @@
             <div class="card-header"><h3>Ringkasan Kebutuhan</h3></div>
             <div class="sum-body">${t.ringkasan || "<span class='muted'>Tidak ada ringkasan.</span>"}</div>
           </div>
+
+          ${imageBlock}
 
           ${t.formData && Object.keys(t.formData).length ? `<div class="card tcard">
             <div class="card-header"><h3>Detail Formulir Layanan</h3></div>
@@ -572,7 +581,6 @@
           </div>
 
           <div class="ticket-actions">
-            <button class="btn small wa-ticket-btn" onclick="TP.waTicket('${t.id}')">Cek progress tiket via WhatsApp ↗</button>
             ${canReject ? `<button class="btn small danger ghost" onclick="TP.rejectTicket('${t.id}')">✕ Tolak / Perlu Perbaikan Data</button>` : ""}
             ${!endStatus && nxt ? `<button class="btn small" onclick="TP.advanceTicket('${t.id}')">→ Proses ke: ${nxt}</button>` : ""}
             ${!endStatus && !isStaff ? `<button class="btn small danger" onclick="TP.cancelTicket('${t.id}')">✕ Batalkan Tiket</button>` : ""}
@@ -799,19 +807,12 @@
   function waChat() {
     window.open(waUrl("Halo CS Tirta Pakuan, saya ingin bertanya tentang layanan pelanggan."), "_blank", "noopener,noreferrer");
   }
-  function waTicket(id) {
-    const t = DB.get().tickets.find((item) => item.id === id);
-    if (!t) { toast("Tiket tidak ditemukan.", "error"); return; }
-    const message = `Halo CS Tirta Pakuan, saya ${t.nama} (No. Pelanggan: ${t.noPelanggan || "—"}). Mohon informasi progress tiket ${t.id} untuk ${t.nmLayanan}. Terima kasih.`;
-    window.open(waUrl(message), "_blank", "noopener,noreferrer");
-  }
   function initWaWidget() {
     const widget = document.createElement("div");
     widget.className = "wa-widget";
     widget.innerHTML = `<div class="wa-menu" id="wa-menu" hidden>
       <div class="wa-menu-head"><strong>Bantuan Tirta Pakuan</strong><span>Hubungi CS melalui WhatsApp</span></div>
       <button type="button" data-wa-chat><span>✆</span><span><b>Chat dengan CS</b><small>Tanya layanan atau sampaikan keluhan</small></span></button>
-      <a href="ticketing.html#daftar-tiket"><span>▤</span><span><b>Cek progress tiket</b><small>Pilih tiket, lalu kirim pertanyaan via WA</small></span></a>
     </div><button type="button" class="wa-fab" aria-label="Buka bantuan WhatsApp" aria-expanded="false" aria-controls="wa-menu"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 .8A15.1 15.1 0 0 0 3 23.6L.9 31l7.6-2A15.2 15.2 0 1 0 16 .8Zm0 27.7a12.4 12.4 0 0 1-6.3-1.7l-.5-.3-4.5 1.2 1.2-4.4-.3-.5A12.4 12.4 0 1 1 16 28.5Zm6.8-9.3c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.4-.2.2-.5.3-.9.1a10.2 10.2 0 0 1-3-1.9 11.4 11.4 0 0 1-2.1-2.6c-.2-.4 0-.6.2-.8l.7-.8c.2-.2.3-.4.4-.7.1-.2 0-.5 0-.7l-1.2-2.8c-.3-.7-.6-.6-.9-.6h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.4 3.9 1.6 4.2c.2.3 2.8 4.3 6.8 6 1 .4 1.8.7 2.4.9 1 .3 1.9.2 2.6.1.8-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5Z"/></svg></button>`;
     document.body.appendChild(widget);
     const fab = widget.querySelector(".wa-fab");
@@ -875,7 +876,6 @@
     rateTicket,
     printTicket,
     waChat,
-    waTicket,
     tab: tabCtrl,
     LS_KEY,
     PAKET_JASA

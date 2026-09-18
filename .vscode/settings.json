@@ -1,0 +1,5 @@
+{
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.NoBrowser": false,
+  "workbench.browser.openLocalhostLinks": false
+}

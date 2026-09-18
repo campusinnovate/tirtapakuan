@@ -33,7 +33,7 @@
       <p>Ajukan permohonan jasa atau laporkan keluhan air Anda. Setiap tiket memiliki nomor unik, data permohonan, ringkasan kebutuhan, dan status yang dapat dipantau real-time.</p>
       <div class="hero-actions">
         <a class="btn white" href="#layanan-tiket">☏ Buat Tiket Baru</a>
-        <a class="btn ghost" href="#daftar-tiket" style="border-color:#fff;color:#fff">Lihat Status Tiket</a>
+        <a class="btn ghost" href="dashboard.html?view=tiket" style="border-color:#fff;color:#fff">Lihat Progress Tiket</a>
       </div>
     </div>
     <svg class="wave" viewBox="0 0 1920 140" preserveAspectRatio="none" aria-hidden="true">
@@ -49,7 +49,7 @@
         <div class="card-header">
           <div>
             <h3>☏ Daftar &amp; Status Tiket Anda</h3>
-          <div class="sub">Pilih tiket untuk melihat status terbaru, atau tekan Cek progress tiket untuk mengirim pertanyaan ke CS melalui WhatsApp.</div>
+          <div class="sub">Pilih tiket untuk melihat detail status terbaru. Untuk memantau seluruh progress, buka Dashboard Pelanggan.</div>
           </div>
           <div class="seg" id="filterSeg">
             <button data-filter="semua" class="active">Semua</button>
@@ -58,6 +58,10 @@
           </div>
         </div>
         <div id="ticket-list"></div>
+        <div class="ticket-dashboard-cta">
+          <div><b>Ingin melihat progress tiket?</b><span>Pantau tahapan dan riwayat tiket Anda langsung dari dashboard.</span></div>
+          <a class="btn small" href="dashboard.html?view=tiket">Buka Dashboard →</a>
+        </div>
       </div>
 
       <div class="card" id="layanan-tiket">
@@ -68,6 +72,13 @@
           </div>
         </div>
 
+        <div class="login-ticket-gate hidden" id="login-ticket-gate">
+          <span class="gate-icon">🔐</span>
+          <div><h3>Masuk SSO untuk membuat tiket</h3><p>Silakan masuk menggunakan akun SSO Perumda terlebih dahulu. Setelah berhasil masuk, Anda akan diarahkan kembali ke formulir tiket ini.</p></div>
+          <a class="btn teal" id="sso-ticket-link" href="dashboard.html?next=ticketing.html%23layanan-tiket">Masuk dengan SSO →</a>
+        </div>
+
+        <div id="ticket-form-area">
         <div class="stepper" id="stepper">
           <div class="step active" data-step="1"><span class="n">1</span>Layanan<b>Jasa / Keluhan</b></div>
           <div class="step" data-step="2"><span class="n">2</span>Form<b>Detail permintaan</b></div>
@@ -128,6 +139,12 @@
           <!-- ======== LANGKAH 2 : FORM LAYANAN / KELUHAN ======== -->
           <div class="step-pane hidden" data-pane="2">
             <div id="svc-form"></div>
+            <div class="field hidden" id="complaint-image-wrap">
+              <label for="f-keluhan-images">Foto problem <small>(opsional, maksimal 3 foto)</small></label>
+              <input class="input" id="f-keluhan-images" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+              <small>Format JPG, PNG, atau WEBP. Maksimal 2 MB per foto.</small>
+              <div id="complaint-image-preview" class="image-preview-grid" aria-live="polite"></div>
+            </div>
             <div class="field" id="f-catatan-wrap">
               <label for="f-catatan">Catatan tambahan (opsional)</label>
               <input class="input" id="f-catatan" placeholder="Mis. estimasi biaya, jadwal yang diinginkan, atau keterangan lain...">
@@ -185,6 +202,7 @@
             </div>
           </div>
         </form>
+        </div>
       </div>
     </div>
   </section>
@@ -231,6 +249,7 @@
     let filter = "semua";
     let type = "jasa";
     let step = 1;
+    let complaintImages = [];
 
     let selJenis = null;        // id jenis pelanggan
     let syaratChecked = [];     // id poin syarat
@@ -289,6 +308,35 @@
       } else {
         wrap.innerHTML = fieldHtml({ key: "keluhan", label: "Detail keluhan *", type: "textarea", required: true, placeholder: "Jelaskan apa yang terjadi, sejak kapan, dan kondisi terkini..." });
       }
+      el("complaint-image-wrap").classList.toggle("hidden", type !== "keluhan");
+    }
+
+    function renderComplaintPreviews() {
+      const preview = el("complaint-image-preview");
+      preview.innerHTML = complaintImages.map((image, index) =>
+        '<figure class="image-preview"><img src="' + image.dataUrl + '" alt="Preview foto problem ' + (index + 1) + '"><button type="button" data-remove-image="' + index + '" aria-label="Hapus foto">×</button><figcaption>' + escapeHtml(image.name) + '</figcaption></figure>'
+      ).join("");
+      preview.querySelectorAll("[data-remove-image]").forEach((button) => button.addEventListener("click", () => {
+        complaintImages.splice(Number(button.dataset.removeImage), 1);
+        renderComplaintPreviews();
+      }));
+    }
+
+    function loadComplaintImages(files) {
+      const selected = Array.from(files || []);
+      if (!selected.length) return;
+      const remaining = 3 - complaintImages.length;
+      if (remaining <= 0) { TP.toast("Maksimal 3 foto problem dapat dilampirkan.", "error"); return; }
+      selected.slice(0, remaining).forEach((file) => {
+        if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size > 2 * 1024 * 1024) {
+          TP.toast(file.name + " tidak dapat ditambahkan. Gunakan JPG/PNG/WEBP maksimal 2 MB.", "error");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => { complaintImages.push({ name: file.name, dataUrl: reader.result }); renderComplaintPreviews(); };
+        reader.readAsDataURL(file);
+      });
+      if (selected.length > remaining) TP.toast("Hanya " + remaining + " foto pertama yang ditambahkan.", "error");
     }
     function collectFormData() {
       const data = {};
@@ -383,7 +431,7 @@
       const s = currentSvc();
       if (type === "keluhan") {
         const det = (el("svc-form").querySelector("[data-key='keluhan']") || {}).value || "";
-        box.innerHTML = "Keluhan: <b>" + s.nama + "</b> — " + det + "<br>Prioritas: <b>" + el("f-prioritas").value + "</b>";
+        box.innerHTML = "Keluhan: <b>" + s.nama + "</b> — " + escapeHtml(det) + "<br>Prioritas: <b>" + el("f-prioritas").value + "</b>" + (complaintImages.length ? "<br>Lampiran foto: <b>" + complaintImages.length + " foto</b>" : "");
         return;
       }
       const fdata = collectFormData();
@@ -483,6 +531,7 @@
 
     /* ======== SUBMIT ======== */
     function submitTicket() {
+      if (!isLoggedIn()) { showLoginGate(); return; }
       const s = currentSvc();
       setStepVis(step);
       if (!formOkAll()) {
@@ -513,6 +562,7 @@
         formData: { ...fdata, ...collectDataLayanan() },
         syaratCheck: { jenisPelanggan: selJenis, syarat: syaratChecked.slice(), kontrak: kontrakChecked.slice() },
         dokumen: [],
+        images: type === "keluhan" ? complaintImages.slice() : [],
         ringkasan: ringkasan.trim(),
         biaya: { nominal: null, catatan: "—" },
         status: "Baru",
@@ -524,7 +574,8 @@
       TP.DB.set(db);
 
       el("ticket-form").reset();
-      selJenis = null; syaratChecked = []; kontrakChecked = [];
+      selJenis = null; syaratChecked = []; kontrakChecked = []; complaintImages = [];
+      renderComplaintPreviews();
       setStepVis(1);
       el("data-layanan-box").dataset.service = "";
       el("data-layanan-box").innerHTML = "";
@@ -558,8 +609,25 @@
           '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
           "<div class='t-meta'>" + (isJasa ? "Layanan jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
           '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip ' + pri.chip + '">' + t.prioritas + '</span><span class="chip ' + chip.chip + '">' + t.status + "</span></div></button>" +
-          '<button type="button" class="btn small wa-ticket-btn" onclick="TP.waTicket(\'' + t.id + '\')">Cek progress tiket ↗</button></div>';
+          '</div>';
       }).join("");
+    }
+
+    function isLoggedIn() {
+      try { return Boolean(JSON.parse(localStorage.getItem("tirtapakuan_session") || "null")?.name); } catch (e) { return false; }
+    }
+    function showLoginGate() {
+      el("login-ticket-gate").classList.remove("hidden");
+      el("ticket-form-area").classList.add("hidden");
+    }
+    function applySessionToForm() {
+      try {
+        const session = JSON.parse(localStorage.getItem("tirtapakuan_session") || "null");
+        if (!session) return;
+        el("f-nama").value = session.name || "";
+        el("f-nohp").value = session.noHP || "";
+        el("f-nopel").value = session.noPelanggan || "";
+      } catch (e) {}
     }
 
     /* ======== EVENT BINDINGS ======== */
@@ -587,6 +655,7 @@
       });
     });
     el("btnSvcDetail").addEventListener("click", () => TP.openServiceModal(el("f-layanan").value));
+    el("f-keluhan-images").addEventListener("change", (e) => { loadComplaintImages(e.target.files); e.target.value = ""; });
 
     el("toStep2").addEventListener("click", () => {
       if (validateLeave(1)) { renderServiceForm(); go2(2); }
@@ -628,6 +697,7 @@
     renderServiceForm();
     renderTickets();
     go2(1);
+    if (!isLoggedIn()) showLoginGate(); else applySessionToForm();
 
     document.querySelectorAll(".menu-toggle").forEach((btn) => btn.addEventListener("click", () => el("mainNav").classList.toggle("open")));
   })();

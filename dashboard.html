@@ -200,12 +200,13 @@
       <!-- ==== TIKET ==== -->
       <section class="dash-section" id="sec-tiket">
         <h2 style="font-size:1.5rem;color:var(--blue-900)">☏ Tiket Layanan</h2>
-        <p class="muted small">Kelola seluruh tiket layanan &amp; keluhan Anda dari sini.</p>
+        <p class="muted small">Pantau progress, tahapan penanganan, dan riwayat seluruh tiket layanan &amp; keluhan Anda dari sini.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
           <a class="btn teal" href="ticketing.html">＋ Buat Tiket Baru</a>
           <a class="btn ghost" href="ticketing.html">Buka Pusat Layanan →</a>
         </div>
         <div class="card" style="margin-top:16px">
+          <div class="card-header"><div><h3>Progress Tiket</h3><div class="sub">Tahap penanganan diperbarui saat tiket diproses.</div></div></div>
           <div id="dash-ticket-list"></div>
         </div>
       </section>
@@ -251,6 +252,9 @@
 
     const $ = (id) => document.getElementById(id);
     const SESSION_KEY = "tirtapakuan_session";
+    const params = new URLSearchParams(location.search);
+    const requestedView = params.get("view");
+    const nextPage = params.get("next");
 
     let role = "pelanggan";
     let currentUser = null;
@@ -283,6 +287,11 @@
       $("dash-screen").classList.remove("hidden");
       TP.toast("Selamat datang, " + currentUser.name.split(" ")[0] + "! Masuk sebagai " + roleLabel(), "success");
       renderAll();
+      if (nextPage && /^ticketing\.html(?:[?#].*)?$/.test(nextPage)) {
+        window.location.href = nextPage;
+        return;
+      }
+      if (requestedView === "tiket") switchSec("tiket");
     }
     function roleLabel() {
       return role === "pelanggan" ? "Pelanggan" : role === "petugas" ? "Petugas Lapangan" : "Administrator";
@@ -390,10 +399,14 @@
       const totW = (t.dokumen || []).filter((d) => d.wajib).length;
       const doneW = (t.dokumen || []).filter((d) => d.wajib && d.status && d.status !== "belum").length;
       const docChip = totW ? '<span class="chip ' + (doneW === totW ? "teal" : "amber") + '">▧ ' + doneW + "/" + totW + '</span>' : "";
+      const flow = t.type === "keluhan" ? TP.STATUS_FLOW_KELUHAN : TP.STATUS_FLOW;
+      const step = flow.indexOf(t.status);
+      const progress = step < 0 ? 0 : Math.round(((step + 1) / flow.length) * 100);
       return '<button class="ticket-row" data-id="' + t.id + '" onclick="' + click + '">' +
         '<span class="t-symbol">' + sym + "</span>" +
         '<div class="t-info"><div><span class="t-title">' + t.id + " · " + t.nmLayanan + "</span>" +
         '<div class="t-meta">' + (isJasa ? "Jasa" : "Keluhan") + " • Dibuat " + t.created + " • " + t.nama + "</div></div></div>" +
+        '<div class="ticket-progress"><div><span>Progress ' + progress + '%</span><b>' + t.status + '</b></div><div class="progress"><div style="width:' + progress + '%"></div></div></div>' +
         '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + docChip +
         '<span class="chip ' + pm.chip + '">' + t.prioritas + '</span><span class="chip ' + sm.chip + '">' + t.status + "</span></div></button>";
     }
