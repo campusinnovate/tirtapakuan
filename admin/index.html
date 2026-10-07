@@ -19,11 +19,14 @@
       <button class="admin-nav" data-view="users">♙ <span>Data pengguna</span></button>
       <button class="admin-nav" data-view="tickets">☏ <span>Manajemen tiket</span><i id="nav-open-tickets">0</i></button>
       <button class="admin-nav" data-view="perception">◉ <span>Persepsi masyarakat</span></button>
+      <div class="admin-side-label admin-side-label-tools">PREFERENSI</div>
+      <button class="admin-nav" data-view="settings">⚙ <span>Pengaturan</span></button>
       <div class="admin-side-note"><b>Data pengembangan</b><p>Seluruh data di panel ini berupa simulasi lokal dan tidak terhubung ke sistem resmi atau API media sosial.</p></div>
     </aside>
     <main class="admin-main">
       <section class="admin-view active" id="view-overview">
-        <div class="admin-title-row"><div><span class="eyebrow">PUSAT KENDALI</span><h1>Dashboard Administrasi</h1><p>Pantau pelanggan, tiket layanan, dan suara masyarakat dalam satu tempat.</p></div><span class="chip amber">● Demo data</span></div>
+        <div class="admin-hero"><div><span class="eyebrow">PERUMDA TIRTA PAKUAN · KOTA BOGOR</span><h1>Pusat kendali pelayanan</h1><p>Pantau pengalaman pelanggan, tindak lanjuti tiket, dan pahami percakapan masyarakat.</p><button class="btn white small" data-open="tickets">Lihat tiket aktif <span id="hero-open-count">0</span> →</button></div><div class="admin-watermark" aria-hidden="true">♧</div><span class="chip amber admin-demo-chip">● Mode demo</span></div>
+        <div class="admin-title-row admin-section-heading"><div><span class="eyebrow">RINGKASAN HARI INI</span><h2>Ikhtisar operasional</h2></div><span class="admin-date" id="admin-date"></span></div>
         <div class="admin-stats" id="admin-stats"></div>
         <div class="admin-grid">
           <article class="card"><div class="card-header"><div><h3>☏ Tiket terbaru</h3><div class="sub">Laporan terhubung ke identitas pengaju</div></div><button class="text-action" data-open="tickets">Semua tiket →</button></div><div id="overview-tickets"></div></article>
@@ -36,23 +39,42 @@
       </section>
       <section class="admin-view" id="view-users">
         <div class="admin-title-row"><div><span class="eyebrow">PELANGGAN & AKUN</span><h1>Data pengguna</h1><p>Direktori demo pelanggan dan aktivitas tiket terkait.</p></div><span class="chip blue" id="user-count">0 pengguna</span></div>
-        <div class="card"><div class="toolbar"><input class="input" id="user-search" placeholder="Cari nama, nomor pelanggan, atau zona…"><span class="small muted">Data identitas contoh</span></div><div class="table-wrap"><table class="table admin-table"><thead><tr><th>Pengguna</th><th>No. pelanggan</th><th>Wilayah</th><th>Tiket</th><th>Status akun</th></tr></thead><tbody id="users-table"></tbody></table></div></div>
+        <div class="card"><div class="toolbar"><input class="input" id="user-search" placeholder="Cari nama, nomor pelanggan, atau zona…"><button class="btn ghost small" id="export-users">↓ Ekspor CSV</button></div><div class="table-wrap"><table class="table admin-table"><thead><tr><th>Pengguna</th><th>No. pelanggan</th><th>Wilayah</th><th>Tiket</th><th>Status akun</th><th></th></tr></thead><tbody id="users-table"></tbody></table></div></div>
       </section>
       <section class="admin-view" id="view-tickets">
         <div class="admin-title-row"><div><span class="eyebrow">OPERASIONAL PELAYANAN</span><h1>Manajemen tiket</h1><p>Lihat pengaju dan perbarui status penanganan tiket.</p></div><span class="chip teal" id="ticket-count">0 tiket</span></div>
-        <div class="card"><div class="toolbar"><input class="input" id="ticket-search" placeholder="Cari ID, pengaju, layanan, atau zona…"><select class="select" id="ticket-filter"><option value="all">Semua status</option><option>Baru</option><option>Verifikasi Data</option><option>Verifikasi</option><option>Survey Lapangan</option><option>Penanganan</option><option>Menunggu Pembayaran</option><option>Selesai</option><option>Ditolak</option><option>Dibatalkan</option></select></div><div id="ticket-admin-list"></div></div>
+        <div class="card"><div class="toolbar"><input class="input" id="ticket-search" placeholder="Cari ID, pengaju, layanan, atau zona…"><select class="select" id="ticket-filter"><option value="all">Semua status</option><option>Baru</option><option>Verifikasi Data</option><option>Verifikasi</option><option>Survey Lapangan</option><option>Penanganan</option><option>Menunggu Pembayaran</option><option>Selesai</option><option>Ditolak</option><option>Dibatalkan</option></select><button class="btn ghost small" id="export-tickets">↓ Ekspor CSV</button></div><div id="ticket-admin-list"></div></div>
+      </section>
+      <section class="admin-view" id="view-settings">
+        <div class="admin-title-row"><div><span class="eyebrow">PREFERENSI WORKSPACE</span><h1>Pengaturan admin</h1><p>Atur tampilan ringkasan dan simulasi pemantauan. Perubahan tersimpan di browser ini.</p></div><span class="chip blue">Tersimpan lokal</span></div>
+        <div class="settings-grid">
+          <article class="card settings-card"><div class="card-header"><div><h3>Notifikasi & operasional</h3><div class="sub">Preferensi untuk panel administrasi demo</div></div><span class="settings-icon">♧</span></div>
+            <label class="setting-row"><span><b>Pengingat tiket baru</b><small>Tampilkan umpan aktivitas saat status tiket berubah.</small></span><input type="checkbox" id="setting-ticket-alert" class="toggle-input"></label>
+            <label class="setting-row"><span><b>Prioritaskan tiket mendesak</b><small>Tandai tiket prioritas tinggi di bagian atas daftar.</small></span><input type="checkbox" id="setting-priority-sort" class="toggle-input"></label>
+            <label class="setting-row"><span><b>Tampilkan data sintetis sosial</b><small>Gunakan contoh percakapan untuk demonstrasi analisis.</small></span><input type="checkbox" id="setting-social-demo" class="toggle-input"></label>
+          </article>
+          <article class="card settings-card"><div class="card-header"><div><h3>Parameter analisis persepsi</h3><div class="sub">Pengaturan kerja untuk simulasi social listening</div></div><span class="settings-icon">◉</span></div>
+            <div class="field"><label for="setting-keywords">Kata kunci pemantauan</label><input class="input" id="setting-keywords" placeholder="Tirta Pakuan, layanan air, gangguan"></div>
+            <div class="field"><label for="setting-threshold">Ambang perhatian sentimen negatif</label><select class="select" id="setting-threshold"><option value="20">20% · Sensitif</option><option value="30">30% · Seimbang</option><option value="40">40% · Ringkas</option></select></div>
+            <div class="field"><label for="setting-retention">Rentang data dashboard</label><select class="select" id="setting-retention"><option value="7">7 hari terakhir</option><option value="30">30 hari terakhir</option><option value="90">90 hari terakhir</option></select></div>
+          </article>
+        </div>
+        <div class="settings-actions"><span class="small muted" id="settings-saved">Pengaturan aktif pada browser ini.</span><button class="btn" id="save-settings">Simpan pengaturan</button><button class="btn ghost" id="reset-settings">Pulihkan default</button></div>
+        <div class="card settings-info"><h3>Identitas & akses</h3><p>Panel memakai data contoh dan penyimpanan browser bersama halaman demo. Untuk penggunaan organisasi, autentikasi peran, audit log, pembatasan akses, dan integrasi backend perlu disiapkan.</p><div class="settings-info-row"><span>Nama workspace</span><b>Perumda Tirta Pakuan Kota Bogor</b></div><div class="settings-info-row"><span>Lingkungan</span><b><span class="chip amber">Pengembangan / dummy</span></b></div></div>
       </section>
       <section class="admin-view" id="view-perception">
         <div class="admin-title-row"><div><span class="eyebrow">SOCIAL LISTENING · SIMULASI</span><h1>Persepsi masyarakat</h1><p>Contoh alur pemantauan percakapan publik tentang Tirta Pakuan.</p></div><button class="btn" id="collect-btn">↻ Simulasikan pengambilan</button></div>
         <div class="alert alert--info perception-notice"><b>Mode demo:</b> unggahan dan angka di bawah merupakan data sintetis untuk memperagakan dashboard. Tidak ada koneksi, scraping, atau pengambilan data langsung dari akun/platform sosial.</div>
         <div class="source-grid" id="source-grid"></div>
+        <div id="perception-alert"></div>
         <div class="admin-stats" id="perception-stats"></div>
-        <div class="card"><div class="card-header"><div><h3>Tren sentimen</h3><div class="sub">Proporsi percakapan contoh per kanal</div></div><span class="small muted">7 hari · simulasi</span></div><div class="sentiment-chart" id="sentiment-chart"></div><div class="chart-legend"><span class="positive">● Positif</span><span class="neutral">● Netral</span><span class="negative">● Negatif</span></div></div>
+        <div class="card"><div class="card-header"><div><h3>Tren sentimen</h3><div class="sub">Proporsi percakapan contoh per kanal</div></div><span class="small muted" id="chart-range">7 hari · simulasi</span></div><div class="sentiment-chart" id="sentiment-chart"></div><div class="chart-legend"><span class="positive">● Positif</span><span class="neutral">● Netral</span><span class="negative">● Negatif</span></div></div>
         <div class="card mention-card"><div class="card-header"><div><h3>Percakapan terpantau</h3><div class="sub">Contoh mention publik dan klasifikasi awal</div></div></div><div class="toolbar"><input class="input" id="mention-search" placeholder="Cari kata atau isi percakapan…"><select class="select" id="platform-filter"><option value="all">Semua kanal</option><option>Instagram</option><option>X</option><option>Facebook</option><option>TikTok</option><option>YouTube</option></select><select class="select" id="sentiment-filter"><option value="all">Semua sentimen</option><option value="positif">Positif</option><option value="netral">Netral</option><option value="negatif">Negatif</option></select></div><div id="mention-list"></div></div>
         <p class="small muted perception-footnote">Sistem produksi memerlukan integrasi API resmi/mitra, persetujuan akses, kebijakan retensi, dan validasi klasifikasi sentimen. Analisis demo ini tidak merepresentasikan opini publik sebenarnya.</p>
       </section>
     </main>
   </div>
+  <div class="admin-modal-backdrop" id="admin-modal" aria-hidden="true"><section class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><header><div><span class="eyebrow">RINCIAN DATA</span><h2 id="admin-modal-title">Detail</h2></div><button class="modal-x" id="admin-modal-close" aria-label="Tutup">×</button></header><div id="admin-modal-body"></div></section></div>
   <div id="toast-wrap"></div>
   <script src="../js/main.js"></script><script src="admin.js"></script>
 </body>
