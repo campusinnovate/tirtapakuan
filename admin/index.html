@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Perumda Tirta Pakuan</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+  <header class="dash-top"><div class="container dash-top-inner">
+    <a class="brand" href="../index.html"><span class="brand-logo">♧</span><span>Perumda <b>Tirta Pakuan</b><small>Panel Administrasi</small></span></a>
+    <div class="admin-head-actions"><span class="admin-identity"><span class="avatar">AD</span><span><b>Administrator</b><small>Mode demo</small></span></span><a class="btn white small" href="../index.html">← Situs utama</a></div>
+  </div></header>
+  <div class="container admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-side-label">WORKSPACE</div>
+      <button class="admin-nav active" data-view="overview">◪ <span>Ringkasan</span></button>
+      <button class="admin-nav" data-view="users">♙ <span>Data pengguna</span></button>
+      <button class="admin-nav" data-view="tickets">☏ <span>Manajemen tiket</span><i id="nav-open-tickets">0</i></button>
+      <button class="admin-nav" data-view="perception">◉ <span>Persepsi masyarakat</span></button>
+      <div class="admin-side-note"><b>Data pengembangan</b><p>Seluruh data di panel ini berupa simulasi lokal dan tidak terhubung ke sistem resmi atau API media sosial.</p></div>
+    </aside>
+    <main class="admin-main">
+      <section class="admin-view active" id="view-overview">
+        <div class="admin-title-row"><div><span class="eyebrow">PUSAT KENDALI</span><h1>Dashboard Administrasi</h1><p>Pantau pelanggan, tiket layanan, dan suara masyarakat dalam satu tempat.</p></div><span class="chip amber">● Demo data</span></div>
+        <div class="admin-stats" id="admin-stats"></div>
+        <div class="admin-grid">
+          <article class="card"><div class="card-header"><div><h3>☏ Tiket terbaru</h3><div class="sub">Laporan terhubung ke identitas pengaju</div></div><button class="text-action" data-open="tickets">Semua tiket →</button></div><div id="overview-tickets"></div></article>
+          <article class="card"><div class="card-header"><div><h3>◉ Persepsi sosial</h3><div class="sub">Ringkasan simulasi lintas kanal</div></div><button class="text-action" data-open="perception">Analisis →</button></div><div id="overview-sentiment"></div></article>
+        </div>
+        <div class="admin-grid admin-grid-bottom">
+          <article class="card"><div class="card-header"><div><h3>Aktivitas terbaru</h3><div class="sub">Perubahan dari sistem demo</div></div></div><div id="activity-feed"></div></article>
+          <article class="card"><div class="card-header"><div><h3>Distribusi tiket</h3><div class="sub">Berdasarkan status saat ini</div></div></div><div id="status-breakdown"></div></article>
+        </div>
+      </section>
+      <section class="admin-view" id="view-users">
+        <div class="admin-title-row"><div><span class="eyebrow">PELANGGAN & AKUN</span><h1>Data pengguna</h1><p>Direktori demo pelanggan dan aktivitas tiket terkait.</p></div><span class="chip blue" id="user-count">0 pengguna</span></div>
+        <div class="card"><div class="toolbar"><input class="input" id="user-search" placeholder="Cari nama, nomor pelanggan, atau zona…"><span class="small muted">Data identitas contoh</span></div><div class="table-wrap"><table class="table admin-table"><thead><tr><th>Pengguna</th><th>No. pelanggan</th><th>Wilayah</th><th>Tiket</th><th>Status akun</th></tr></thead><tbody id="users-table"></tbody></table></div></div>
+      </section>
+      <section class="admin-view" id="view-tickets">
+        <div class="admin-title-row"><div><span class="eyebrow">OPERASIONAL PELAYANAN</span><h1>Manajemen tiket</h1><p>Lihat pengaju dan perbarui status penanganan tiket.</p></div><span class="chip teal" id="ticket-count">0 tiket</span></div>
+        <div class="card"><div class="toolbar"><input class="input" id="ticket-search" placeholder="Cari ID, pengaju, layanan, atau zona…"><select class="select" id="ticket-filter"><option value="all">Semua status</option><option>Baru</option><option>Verifikasi Data</option><option>Verifikasi</option><option>Survey Lapangan</option><option>Penanganan</option><option>Menunggu Pembayaran</option><option>Selesai</option><option>Ditolak</option><option>Dibatalkan</option></select></div><div id="ticket-admin-list"></div></div>
+      </section>
+      <section class="admin-view" id="view-perception">
+        <div class="admin-title-row"><div><span class="eyebrow">SOCIAL LISTENING · SIMULASI</span><h1>Persepsi masyarakat</h1><p>Contoh alur pemantauan percakapan publik tentang Tirta Pakuan.</p></div><button class="btn" id="collect-btn">↻ Simulasikan pengambilan</button></div>
+        <div class="alert alert--info perception-notice"><b>Mode demo:</b> unggahan dan angka di bawah merupakan data sintetis untuk memperagakan dashboard. Tidak ada koneksi, scraping, atau pengambilan data langsung dari akun/platform sosial.</div>
+        <div class="source-grid" id="source-grid"></div>
+        <div class="admin-stats" id="perception-stats"></div>
+        <div class="card"><div class="card-header"><div><h3>Tren sentimen</h3><div class="sub">Proporsi percakapan contoh per kanal</div></div><span class="small muted">7 hari · simulasi</span></div><div class="sentiment-chart" id="sentiment-chart"></div><div class="chart-legend"><span class="positive">● Positif</span><span class="neutral">● Netral</span><span class="negative">● Negatif</span></div></div>
+        <div class="card mention-card"><div class="card-header"><div><h3>Percakapan terpantau</h3><div class="sub">Contoh mention publik dan klasifikasi awal</div></div></div><div class="toolbar"><input class="input" id="mention-search" placeholder="Cari kata atau isi percakapan…"><select class="select" id="platform-filter"><option value="all">Semua kanal</option><option>Instagram</option><option>X</option><option>Facebook</option><option>TikTok</option><option>YouTube</option></select><select class="select" id="sentiment-filter"><option value="all">Semua sentimen</option><option value="positif">Positif</option><option value="netral">Netral</option><option value="negatif">Negatif</option></select></div><div id="mention-list"></div></div>
+        <p class="small muted perception-footnote">Sistem produksi memerlukan integrasi API resmi/mitra, persetujuan akses, kebijakan retensi, dan validasi klasifikasi sentimen. Analisis demo ini tidak merepresentasikan opini publik sebenarnya.</p>
+      </section>
+    </main>
+  </div>
+  <div id="toast-wrap"></div>
+  <script src="../js/main.js"></script><script src="admin.js"></script>
+</body>
+</html>
